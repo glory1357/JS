@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+
+    <script>
+
+let a;
+let b;
+let c;
+let d;
+let x1;
+let x2;
+let modulB;
+function quadraticEquation(a,b,c){
+  
+  d = b**2 - 4*c*a;
+  modulB= Math.abs(b);
+  
+  if(d>0){
+      x1 = (-b + Math.sqrt(d))/(2*a);
+      x2 = (-b - Math.sqrt(d))/(2*a);
+      (a!=1)?console.log(`уравнение ${a}х^2 – ${modulB}x + ${c} = 0 имеет корни x1 = ${x1} и x2 = ${x2} `):console.log(`уравнение х^2 – ${modulB}x + ${c} = 0 имеет корни x1 = ${x1} и x2 = ${x2}  `); 
+  } else if(d==0){
+        x1 = (-b) /(2*a); 
+        (a!=1)?console.log(`уравнение ${a}x^2 + ${modulB}x + ${c} = 0 имеет один корень x = ${x1} `):console.log(`уравнение x^2 + ${modulB}x + ${c} = 0 имеет один корень x = ${x1} `) 
+  } else {
+        (a!=1)?console.log(`уравнение ${a}x^2 - ${modulB}x + ${c} = 0 не имеет вещественных корней`):console.log(`уравнение x^2 - ${modulB}x + ${c} = 0 не имеет вещественных корней`) 
+  }
+}
+quadraticEquation(1, -8, 72); 
+quadraticEquation(1, 12, 36); 
+quadraticEquation(4, -8, 1); 
+
+
+    </script>
+
+
+
+</body>
+</html>
