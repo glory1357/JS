@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <p>Перед скриптом...</p>
+
+    <script>
+   let login = prompt('Введите логин', '');
+
+   if (login == 'Админ') {
+       let pass = prompt('Введите пароль', '');
+
+       if (pass == 'Я главный') {
+           alert('Здравствуйте');
+       }
+        else if (pass==''|| pass==null) {
+           alert('Отменено');
+
+       } else alert('Неверный пароль');
+    }
+   else if (login==''|| login==null) {
+       alert('Отмена');
+
+   } else alert('Я вас не знаю');
+
+
+    </script>
+  
+    <p>...После скрипта.</p>
+
+
+</body>
+</html>
