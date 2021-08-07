@@ -1,0 +1,59 @@
+`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+let lastName = prompt("Введите Вашу фамилию:", '');
+while(lastName==null || lastName==undefined|| lastName==''||lastName.length === 1|| !isNaN(lastName)){
+    lastName = prompt("Введите Вашу фамилию:", '');
+}
+
+let firstName = prompt("Введите Ваше имя:", '');
+while(firstName==null || firstName==undefined|| firstName==''||firstName.length === 1|| !isNaN(firstName)){
+    firstName = prompt("Введите Ваше имя:", '');
+}
+let patronymic = prompt("Введите Ваше отчество:", '');
+while(patronymic==null || patronymic==undefined|| patronymic==''||patronymic.length === 1|| !isNaN(patronymic)){
+    patronymic = prompt("Введите Ваше отчество:", '');
+}
+let years = prompt("Введите возраст в годах:", '');
+while(isNaN(years)|| years<=0|| years==null || years==undefined|| years==''){
+    years = prompt("Введите возраст в годах:", '');
+}
+let gender = confirm("Ваш пол женский?");
+let days = years*365;
+let genderResult;
+let age;
+let pension;
+
+
+(gender == true) ? genderResult = 'Женский': genderResult = 'Мужской';
+
+if (years>=18){
+    age = "Вы уже совершеннолетний";
+}
+else if (years<18 && years>=0){
+    age = "Вы не совершеннолетний";
+}
+
+(years>=60)?pension="Да":pension="Нет";
+
+
+alert(`Ваше ФИО: ${lastName} ${firstName} ${patronymic}
+Ваш возраст в годах: ${years}
+Ваш возраст в днях: ${days}
+${age}
+Ваш пол: ${genderResult}
+Вы на пенсии: ${pension}`);
+
+
+    </script>
+
+</body>
+</html>
