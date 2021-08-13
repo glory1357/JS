@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>compression.html</title>
+</head>
+<body>
+    
+<script>
+
+function compress(text) {
+    var j;
+    var count = 1;
+    var cons = " ";
+    for (var i = 0; i < text.length;) {
+        j = text[i];
+        i++;
+        if (j === text[i]) {
+            count++;
+        } else {
+            cons += (j + count);
+            count = 1;
+
+        }
+
+    }
+    console.log(text + " =>" + cons);
+}
+
+compress('ffdgggyy');
+
+
+function compress(text) {
+    var count = 1;
+    var cons = " ";
+    for (var i = 0; i < text.length; i++) {
+        if (text[i] === text[i+1]) {
+            count++;
+        } else {
+            cons += (text[i] + count);
+            count = 1;
+        }
+    }
+    console.log(text + " =>" + cons);
+}
+
+compress('ffdgggyy');
+
+var number = '';
+
+function uncompress(text) {
+    let num = "";
+    let str = {};
+    let sumLet = "";
+
+    for (var i = 0; i < text.length; i++) {
+        if (isNaN(text[i])) {
+            var letter = text[i];
+            num = "";
+        } else {
+            num += text[i];
+        }
+        str[letter] = num;
+
+    }
+    for (key in str) {
+        if (str[key] === "") {
+            str[key] = 1;
+        }
+        sumLet += key.repeat(str[key])
+
+    }
+    console.log(sumLet)
+}
+
+uncompress('a10gb15cf4');
+
+
+
+</script>
+
+</body>
+</html>
