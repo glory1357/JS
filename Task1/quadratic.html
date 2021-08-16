@@ -12,33 +12,79 @@
 
     <script>
 
+// let a;
+// let b;
+// let c;
+// let d;
+// let x1;
+// let x2;
+// function quadraticEquation(a,b,c){
+  
+//   d = b**2 - 4*c*a;
+  
+//   if(d>0){
+//       x1 = (-b + Math.sqrt(d))/(2*a);
+//       x2 = (-b - Math.sqrt(d))/(2*a);
+//       (a!=1)?console.log(`уравнение ${a}х^2 – ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет корни x1 = ${x1} и x2 = ${x2} `):console.log(`уравнение х^2 – ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет корни x1 = ${x1} и x2 = ${x2}  `)||
+//       (a===(-1))?console.log(`уравнение -х^2 – ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет корни x1 = ${x1} и x2 = ${x2} `):console.log(`уравнение х^2 – ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет корни x1 = ${x1} и x2 = ${x2}  `);
+//   } else if(d==0){
+//         x1 = (-b) /(2*a); 
+//         (a!=1)?console.log(`уравнение ${a}x^2 + ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет один корень x = ${x1} `):console.log(`уравнение x^2 + ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет один корень x = ${x1} `) 
+//   } else {
+//         (a!=1)?console.log(`уравнение ${a}x^2 - ${Math.abs(b)}x + ${Math.abs(c)} = 0 не имеет вещественных корней`):console.log(`уравнение x^2 - ${Math.abs(b)}x + ${Math.abs(c)} = 0 не имеет вещественных корней`) 
+//   }
+// }
+// quadraticEquation(1, -8, 72); 
+// quadraticEquation(1, 12, 36); 
+// quadraticEquation(4, -8, 1); 
+
+
+
+
+// Исправлено
+
 let a;
 let b;
 let c;
 let d;
 let x1;
 let x2;
-function quadraticEquation(a,b,c){
-  
-  d = b**2 - 4*c*a;
-  
-  if(d>0){
-      x1 = (-b + Math.sqrt(d))/(2*a);
-      x2 = (-b - Math.sqrt(d))/(2*a);
-      (a!=1)?console.log(`уравнение ${a}х^2 – ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет корни x1 = ${x1} и x2 = ${x2} `):console.log(`уравнение х^2 – ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет корни x1 = ${x1} и x2 = ${x2}  `)||
-    (a===(-1))?console.log(`уравнение -х^2 – ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет корни x1 = ${x1} и x2 = ${x2} `):console.log(`уравнение х^2 – ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет корни x1 = ${x1} и x2 = ${x2}  `);
-  } else if(d==0){
-        x1 = (-b) /(2*a); 
-        (a!=1)?console.log(`уравнение ${a}x^2 + ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет один корень x = ${x1} `):console.log(`уравнение x^2 + ${Math.abs(b)}x + ${Math.abs(c)} = 0 имеет один корень x = ${x1} `) 
-  } else {
-        (a!=1)?console.log(`уравнение ${a}x^2 - ${Math.abs(b)}x + ${Math.abs(c)} = 0 не имеет вещественных корней`):console.log(`уравнение x^2 - ${Math.abs(b)}x + ${Math.abs(c)} = 0 не имеет вещественных корней`) 
-  }
+let koefA;
+let koefB;
+let koefC;
+
+function quadraticEquation(a, b, c) {
+
+    d = b ** 2 - 4 * c * a;
+
+    if (a === 1) {
+        koefA = ("");
+    } else if (a === (-1)) {
+        koefA = ("-");
+    } else {
+        koefA = a;
+    }
+
+    (b >= 0) ? koefB = ("+ " + b): koefB = ('- ' + Math.abs(b));
+    (c >= 0) ? koefC = ("+ " + c): koefC = ('- ' + Math.abs(c));
+
+    if (d > 0) {
+        x1 = (-b + Math.sqrt(d)) / (2 * a);
+        x2 = (-b - Math.sqrt(d)) / (2 * a);
+        console.log(`уравнение ${koefA}х^2 ${koefB}x ${koefC} = 0 имеет корни x1 = ${x1} и x2 = ${x2} `);
+    } else if (d == 0) {
+        x1 = (-b) / (2 * a);
+        console.log(`уравнение ${koefA}x^2 ${koefB}x ${koefC} = 0 имеет один корень x = ${x1} `);
+    } else {
+        console.log(`уравнение ${koefA}x^2 ${koefB}x ${koefC} = 0 не имеет вещественных корней`);
+    }
+
+
+
 }
-quadraticEquation(1, -8, 72); 
-quadraticEquation(1, 12, 36); 
-quadraticEquation(4, -8, 1); 
-
-
+quadraticEquation(1, -8, 72);
+quadraticEquation(1, 12, 36);
+quadraticEquation(4, -8, 1);
     </script>
 
 
