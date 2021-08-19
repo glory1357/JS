@@ -14,14 +14,29 @@
     </style>
 </head>
 <body>
-    <button>
+    <button>0
     </button>
-    <button>
+    <button>0
     </button>
 
     <script>
 
+var btns = document.querySelectorAll('button');
 
+function makeCounter() {
+    var Count = 1;
+
+    return function() {
+        return Count++;
+    };
+}
+
+for (let i = 0; i < btns.length; i++) {
+    var counter = makeCounter();
+    btns[i].onclick = function() {
+        btns[i].innerText = counter();
+    }
+}
 
     </script>
 
