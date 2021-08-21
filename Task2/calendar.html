@@ -32,7 +32,13 @@
 <script>
 function createCalendar(elem, year, month) {
     year=prompt("Введите год","");
+    while(year===''||isNaN(year)||year%1!==0||year===null){
+        year = prompt("Введите правильный год:", '');
+}
     month=prompt("Введите номер месяца","");
+    while(month===''||month<1||month>12||isNaN(month)||month%1!==0){
+        month = prompt("Введите правильный номер месяца:", '');
+}
 
 
     var mon = month - 1; 
