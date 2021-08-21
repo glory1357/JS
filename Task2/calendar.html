@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>calendar.html</title>
+    <style>
+       h5{
+   color:red;
+   margin:0px;
+   font-size:24px;
+   margin-left: 70px;
+   }
+   table{
+   text-align: center;
+   }
+   th{
+   padding:10px;
+   font-size: 22px;
+   color: #c11b00;
+   }
+   td{
+   padding:3px;
+   font-size: 20px;
+   }
+    </style>
+</head>
+<body>
+    <div id="calendar"></div>
+
+<script>
+function createCalendar(elem, year, month) {
+    year=prompt("Введите год","");
+    month=prompt("Введите номер месяца","");
+
+
+    var mon = month - 1; 
+    var d = new Date(year, mon);
+    var monthWord;
+    (mon === 0) ? monthWord = "Январь": (mon === 1) ? monthWord = "Февраль" : (mon === 2) ? monthWord = "Март" : (mon === 3) ? monthWord = "Апрель" : (mon === 4) ? monthWord = "Май" : (mon === 5) ? monthWord = "Июнь" : (mon === 6) ? monthWord = "Июль" : (mon === 7) ? monthWord = "Август" : (mon === 8) ? monthWord = "Сентябрь" : (mon === 9) ? monthWord = "Октябрь" : (mon === 10) ? monthWord = "Ноябрь" : monthWord = "Декабрь";
+
+    var table = '<table><h5>' + monthWord + " " + year + " " + 'года</h5><tr><th>пн</th><th>вт</th><th>ср</th><th>чт</th><th>пт</th><th>сб</th><th>вс</th></tr><tr>';
+
+    for (var i = 0; i < getDay(d); i++) {
+        table += '<td></td>';
+    }
+
+    while (d.getMonth() === mon) {
+        table += '<td>' + d.getDate() + '</td>';
+
+        if (getDay(d) === 6) { 
+            table += '</tr><tr>';
+        }
+
+        d.setDate(d.getDate() + 1);
+    }
+
+    if (getDay(d) != 0) {
+        for (var i = getDay(d); i < 7; i++) {
+            table += '<td></td>';
+        }
+    }
+
+    table += '</tr></table>';
+
+    elem.innerHTML = table;
+}
+
+function getDay(date) { 
+    var day = date.getDay();
+    if (day === 0) day = 7;
+    return day - 1;
+}
+
+createCalendar(calendar);
+</script>
+
+</body>
+</html>
