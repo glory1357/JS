@@ -9,7 +9,92 @@
 <body>
     
 <script>
-    
+
+// ---------------reduce()-----------------
+
+function currentSums(numbers) {
+    var result = [];
+    var str = "";
+    var string = [];
+
+    var Sums = numbers.reduce(function(sum, item) {
+        result.push(sum);
+        var koefItem;
+        (item < 0) ? koefItem = (`(${item})`): koefItem = item;
+        if (str === "") {
+            str = item;
+        } else {
+            str = str + "+" + koefItem;
+        }
+        string.push(str);
+        return sum + item;
+    }, 0);
+    result.push(Sums);
+    result.shift();
+
+    console.log(`[${string}] = [${result}]`);
+}
+
+currentSums([2, 3, 5, 7, 11, 13, 17]);
+
+
+// ----------------map()------------------
+
+
+const str = "Каждый охотник желает знать, где сидит фазан.";
+
+function firstLettersFromString(str) {
+    str = str.split(" ");
+    var letters = str.map(function(item) {
+        return item[0];
+    });
+    return letters;
+}
+const newArr = firstLettersFromString(str);
+console.log(newArr);
+
+
+
+
+// ---------------filter()----------------
+
+const startArray = [-1, 2, 3.5, -12, 4, 1.25, 16];
+
+function filteredArray(startArray) {
+    var num = startArray.filter(function(item) {
+        if (item % 1 === 0 && item > 0) {
+            return item;
+        }
+    });
+    return num;
+}
+
+
+const newArray = filteredArray(startArray);
+console.log(newArray);
+
+
+
+
+// --------------------sort()----------------
+
+
+
+const array1 = [false, 1, 0, NaN, 2, 0, null, 3, 4, 0, 5];
+const array2 = [0, 2, 0, 4, 0, 6];
+const array3 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+var moveZeros = (a,b) => ((b===0) ? -1 : 0); 
+
+array1.sort(moveZeros);
+array2.sort(moveZeros);
+array3.sort(moveZeros);
+
+
+console.log(array1);
+console.log(array2);
+console.log(array3);
+
 </script>
 
 </body>
