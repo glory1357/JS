@@ -10,29 +10,47 @@
     
     <script>
 
-    var letters = ['а', 'у', 'о', 'ы', 'э', 'я', 'ю', 'ё', 'и', 'е'];
-    var vowels = "";
+//     var letters = ['а', 'у', 'о', 'ы', 'э', 'я', 'ю', 'ё', 'и', 'е'];
+//     var vowels = "";
 
-function countVowelLetters(str) {
-    for (var i = 0; i < str.length; i++) {
-        vowels += letters.filter(vovel => vovel === str[i]);
-    }
-    console.log('Количество гласных = ' + vowels.length);
-}
+// function countVowelLetters(str) {
+//     for (var i = 0; i < str.length; i++) {
+//         vowels += letters.filter(vovel => vovel === str[i]);
+//     }
+//     console.log('Количество гласных = ' + vowels.length);
+// }
 
-countVowelLetters("Пришла зима, запахло…");
+// countVowelLetters("Пришла зима, запахло…");
 
 // Исправление
 
-var vowels;
- var string = [];
+// var vowels;
+//  var string = [];
+
+// function countVowelLetters(str) {
+//    string = str.split('');
+//    vowels = string.filter(vovel => vovel === 'а'||vovel === 'у'||vovel === 'о'||vovel === 'ы'||vovel === 'э'||vovel === 'я'||vovel === 'ю'||vovel === 'ё'||vovel === 'и'||vovel === 'е');
+//     console.log('Количество гласных = ' + vowels.length);
+// }
+
+// countVowelLetters("Пришла зима, запахло…");
+
+
+
+// -----------------Исправлено---------------------
+
+var letters = ['а', 'у', 'о', 'ы', 'э', 'я', 'ю', 'ё', 'и', 'е'];
+var count = 0;
 
 function countVowelLetters(str) {
-   string = str.split('');
-   vowels = string.filter(vovel => vovel === 'а'||vovel === 'у'||vovel === 'о'||vovel === 'ы'||vovel === 'э'||vovel === 'я'||vovel === 'ю'||vovel === 'ё'||vovel === 'и'||vovel === 'е');
-    console.log('Количество гласных = ' + vowels.length);
-}
+    for (var i = 0; i < str.length; i++) {
+        count += (str[i].includes('а') || str[i].includes('А') || str[i].includes('у') || str[i].includes('У') || str[i].includes('о')) || str[i].includes('О') || str[i].includes('ы') || str[i].includes('Ы') || str[i].includes('э') || str[i].includes('Э') || str[i].includes('я') || str[i].includes('Я') || str[i].includes('ю') || str[i].includes('Ю') || str[i].includes('ё') || str[i].includes('Ё') || str[i].includes('и') || str[i].includes('И') || str[i].includes('е') || str[i].includes('Е');
 
+
+
+    }
+    console.log('Количество гласных = ' + count);
+}
 countVowelLetters("Пришла зима, запахло…");
     </script>
 
