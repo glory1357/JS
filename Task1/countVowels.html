@@ -39,13 +39,12 @@
 
 // -----------------Исправлено---------------------
 
-var letters = ['а', 'у', 'о', 'ы', 'э', 'я', 'ю', 'ё', 'и', 'е'];
+var letters = ['а', "А", "У", 'у', 'о', "О", 'ы', "Ы", 'э', "Э", 'я', "Я", 'ю', "Ю", 'ё', "Ё", 'и', "И", 'е', "Е"];
 var count = 0;
 
 function countVowelLetters(str) {
     for (var i = 0; i < str.length; i++) {
-        count += (str[i].includes('а') || str[i].includes('А') || str[i].includes('у') || str[i].includes('У') || str[i].includes('о')) || str[i].includes('О') || str[i].includes('ы') || str[i].includes('Ы') || str[i].includes('э') || str[i].includes('Э') || str[i].includes('я') || str[i].includes('Я') || str[i].includes('ю') || str[i].includes('Ю') || str[i].includes('ё') || str[i].includes('Ё') || str[i].includes('и') || str[i].includes('И') || str[i].includes('е') || str[i].includes('Е');
-
+        count += letters.includes(str[i]);
 
 
     }
