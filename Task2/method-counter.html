@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>method-counter.html</title>
+</head>
+<body>
+    
+<script>
+    
+ function getCounter(_a=0){
+   var self = this;
+   self.a = _a;
+   self.count = function(_a){self.a += _a; return self;}
+   self.reset = function(){self.a = 0; return self;}
+   self.log = function(){console.log(self.a);return self;}
+ }
+
+var counter = new getCounter(5);
+
+counter.log().count(4).log().count(3).log().reset().log().count(8).log();
+
+
+
+</script>
+
+</body>
+</html>
