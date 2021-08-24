@@ -95,6 +95,34 @@ console.log(array1);
 console.log(array2);
 console.log(array3);
 
+
+
+
+
+// ----------------------changeArray----------
+
+
+
+
+
+function changeArray(array) {
+    var arrLeft = [];
+    if (array.length % 2 === 0) {
+        arrLeft = array.splice(0, (array.length / 2));
+        array.push(...arrLeft);
+        console.log(array);
+    } else {
+        arrLeft = array.splice(0, Math.floor(array.length / 2));
+        arrLeft.unshift(array.shift());
+        array.push(...arrLeft);
+        console.log(array);
+    }
+}
+
+changeArray([1, 2, 3, 4, 5]); //[ 4, 5, 3, 1, 2 ]
+changeArray([1, 2]); //[ 2, 1 ] 
+changeArray([1, 2, 3, 4, 5, 6, 7, 8]); //[ 5, 6, 7, 8, 1, 2, 3, 4 ]
+
 </script>
 
 </body>
