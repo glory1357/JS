@@ -5,14 +5,128 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>coctails.html</title>
+    <style>
+        button {
+            margin-bottom: 20px
+        }
+
+        div {
+            font-size: 20px
+        }
+
+        button {
+            background: red;
+            font-size: 20px;
+            color: white;
+        }
+
+        p {
+            margin: 0px;
+        }
+
+        span {
+            font-size: 25px
+        }
+
+    </style>
 </head>
 <body>
+
+    <button id='button1'>ввод рецепта</button>
+    <button id='button2'>рецепт напитка</button>
+    <button id='button3'>удаление рецепта</button>
+    <button id='button4'>перечень всех коктейлей</button><br>
+    <div id='div'></div>
+
+
     <script src="JS/HashStorage.js"></script>
     <script>
 
+var coctailsStorage = new HashStorage();
+coctailsStorage.addValue("Маргарита", ({
+    'Алкогольный': 'Да',
+    'Необходимые ингредиенты:': ['Водка Finlandia 50мл', 'Кофейный ликер 25мл', 'Лед в кубиках 120 г'],
+    'Рецепт приготовления:': 'Наполни стакан кубиками льда доверху, затем налей кофейный ликер 25 мл, водку 50 мл и размешай коктейльной ложкой.'
+}));
+coctailsStorage.addValue("Пеликан", ({
+    'Алкогольный': 'Нет',
+    'Необходимые ингредиенты:': ['Гренадин Monin 10мл', 'Клубничный сироп Monin 10мл', 'Персиковый сок 150мл', 'Лимонный сок 15мл', 'Банан 110г', 'Клубника 50г', 'Дробленый лед 60г'],
+    'Рецепт приготовления:': 'Положи в блендер очищенную и нарезанную половинку банана и клубнику 2 ягоды. Налей лимонный сок 15 мл, гренадин 10 мл, клубничный сироп 10 мл и персиковый сок 150 мл. Добавь в блендер совок дробленого льда и взбей. Перелей в хайбол. Укрась кружком банана и половинкой клубники на коктейльной шпажке.'
+}));
+coctailsStorage.addValue("Пиранья", ({
+    'Алкогольный': 'Да',
+    'Необходимые ингредиенты:': ['Водка 37 мл', 'Шоколадный ликер, коричневый 25 мл', 'Кола, сильно охлажденная 25 мл'],
+    'Рецепт приготовления:': 'Влейте спиртное в низкий стакан, заполненный большим количеством колотого льда. Хорошо размешайте. Затем добавьте колу.'
+}));  
+coctailsStorage.addValue("Оазис", ({
+    'Алкогольный': 'Да',
+    'Необходимые ингредиенты:': ['Джин 50 мл', 'Ликер «Кюрасао» голубой 12 мл', 'Тоник 100 мл'],
+    'Рецепт приготовления:': 'Влейте джин в стакан, наполовину заполненный колотым льдом. Добавьте Кюрасао, влейте тоник и перемешайте. Украсьте долькой лимона и веточкой мяты.'
+}));       
 
 
+var btn1 = document.getElementById('button1');
+var btn2 = document.getElementById('button2');
+var btn3 = document.getElementById('button3');
+var btn4 = document.getElementById('button4');
+var div = document.getElementById('div');
+var text;
 
+btn1.onclick = function() {
+    var name = prompt('Введите название коктейля:', '');
+    var alcohol = prompt('Коктейль алкогольный?', '');
+    var ingredients = prompt('Введите ингридиенты и их пропорции', '');
+    var recipe = prompt('Напишите рецепт приготовления:', '');
+    var ingredientSplit = ingredients.split(',');
+    var value = {
+        'Алкогольный': alcohol,
+        'Необходимые ингредиенты:': ingredientSplit,
+        'Рецепт приготовления:': recipe
+    };
+    coctailsStorage.addValue(name, value);
+}
+
+btn2.onclick = function() {
+    var name = prompt('Введите название коктейля:', '');
+    // console.log(name);
+    if (name in coctailsStorage.storage) {
+        var info = coctailsStorage.getValue(name);
+        console.log(info);
+        text = '<h2>' + `Коктейль "${name}" (${Object.keys(info)[0]}: ${info[`Алкогольный`]})` + '</h2>\n<span>' + Object.keys(info)[1] + '</span><ul>';
+        for (var i = 0; i < info['Необходимые ингредиенты:'].length; i++) {
+            text += '<li>' + info['Необходимые ингредиенты:'][i] + '</li>';
+        }
+        text += '</ul>\n<span>' + Object.keys(info)[2] + '</span></p>' + info['Рецепт приготовления:'] + '</p>';
+        div.innerHTML = text;
+    } else {
+        alert('Такого коктейля нету')
+    }
+
+}
+
+
+btn3.onclick = function() {
+    var name = prompt('Введите название коктейля:', '');
+    if (name in coctailsStorage.storage) {
+        coctailsStorage.deleteValue(name);
+        alert(`коктейль ${name} удален`);
+    } else {
+        alert('такого коктейля нету');
+    }
+}
+
+btn4.onclick = function() {
+    div.innerHTML = '';
+    if (coctailsStorage.getKeys() === undefined) {
+        alert('Книга рецептов пустая');
+    } else {
+        coctailsStorage.getKeys();
+        for (var i = 0; i < coctailsStorage.getKeys().length; i++) {
+            div.innerHTML += '<li>' + coctailsStorage.getKeys()[i] + '</li>';
+        }
+    }
+
+}
     </script>
 </body>
 </html>
