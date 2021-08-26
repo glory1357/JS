@@ -10,15 +10,42 @@
     
 <script>
     
- function getCounter(_a=0){
-   var self = this;
-   self.a = _a;
-   self.count = function(_a){self.a += _a; return self;}
-   self.reset = function(){self.a = 0; return self;}
-   self.log = function(){console.log(self.a);return self;}
- }
+//  function getCounter(_a=0){
+//    var self = this;
+//    self.a = _a;
+//    self.count = function(_a){self.a += _a; return self;}
+//    self.reset = function(){self.a = 0; return self;}
+//    self.log = function(){console.log(self.a);return self;}
+//  }
 
-var counter = new getCounter(5);
+// var counter = new getCounter(5);
+
+// counter.log().count(4).log().count(3).log().reset().log().count(8).log();
+
+
+
+// ------------Исправлено==========
+
+function getCounter(_a = 0) {
+    var counters = {};
+    counters.a = _a;
+    counters.count = function(_a) {
+        this.a += _a;
+        return counters;
+    }
+    counters.reset = function() {
+        this.a = 0;
+        return counters;
+    }
+    counters.log = function() {
+        console.log(this.a);
+        return counters;
+    }
+    return counters;
+}
+
+var counter = getCounter(5);
+
 
 counter.log().count(4).log().count(3).log().reset().log().count(8).log();
 
