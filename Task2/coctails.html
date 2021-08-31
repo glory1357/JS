@@ -72,19 +72,64 @@ var btn4 = document.getElementById('button4');
 var div = document.getElementById('div');
 var text;
 
+// btn1.onclick = function() {
+//     var name = prompt('Введите название коктейля:', '');
+//     var alcohol = prompt('Коктейль алкогольный?', '');
+//     var ingredients = prompt('Введите ингридиенты и их пропорции', '');
+//     var recipe = prompt('Напишите рецепт приготовления:', '');
+//     var ingredientSplit = ingredients.split(',');
+//     var value = {
+//         'Алкогольный': alcohol,
+//         'Необходимые ингредиенты:': ingredientSplit,
+//         'Рецепт приготовления:': recipe
+//     };
+//     coctailsStorage.addValue(name, value);
+// }
+
+
+// ------------------------Исправлено----------------------------------------
 btn1.onclick = function() {
     var name = prompt('Введите название коктейля:', '');
-    var alcohol = prompt('Коктейль алкогольный?', '');
-    var ingredients = prompt('Введите ингридиенты и их пропорции', '');
+    while (true) {
+        if (name) {
+            break;
+        }
+        name = prompt('Введите название коктейля:', '');
+    }
+    var alcoholConf = confirm('Коктейль алкогольный?');
+    var alcohol;
+    (alcoholConf === true) ? alcohol = "Да": alcohol = "Нет";
+
+    var ingred = prompt('Введите один из ингредиентов и его пропорции', '');
+    var ingredients = [];
+    var question;
+    while (true) {
+        if (ingred) {
+            ingredients.push(ingred);
+            question = confirm("Еще будет ингредиент?");
+            if (!question) {
+                break;
+            }
+        }
+        ingred = prompt('Введите один из ингредиентов и его пропорции', '');
+    }
     var recipe = prompt('Напишите рецепт приготовления:', '');
-    var ingredientSplit = ingredients.split(',');
+    while (true) {
+        if (recipe) {
+            break;
+        }
+        recipe = prompt('Напишите рецепт приготовления:', '');
+    }
     var value = {
         'Алкогольный': alcohol,
-        'Необходимые ингредиенты:': ingredientSplit,
+        'Необходимые ингредиенты:': ingredients,
         'Рецепт приготовления:': recipe
     };
     coctailsStorage.addValue(name, value);
+    console.log(coctailsStorage.storage);
 }
+
+// ------------------------Исправлено----------------------------------------
 
 btn2.onclick = function() {
     var name = prompt('Введите название коктейля:', '');
