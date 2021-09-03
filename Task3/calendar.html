@@ -74,7 +74,7 @@ button {
 
     var lastDay = new Date(year, mon - 1, 0).getDate() - getDay(d) + 1;
     for (var i = 0; i < getDay(d); i++) {
-        table += '<td id="lastDay">' + lastDay + '</td>';
+        table += '<td class="lastDay">' + lastDay + '</td>';
         lastDay++;
     }
 
@@ -91,7 +91,7 @@ button {
     if (getDay(d) != 0) {
         var count = 1;
         for (var i = getDay(d); i < 7; i++) {
-            table += '<td id="nextDay">' + count + '</td>';
+            table += '<td class="nextDay">' + count + '</td>';
             count++;
         }
     }
@@ -162,8 +162,8 @@ for (var elem of lastDayId) {
 }
 const nextDayId = document.getElementsByClassName("nextDay");
 for (var elem of nextDayId) {
-    elem.style.cssText = `background-color: white;
-  color:#cec3c4;`;
+    elem.style.cssText = `background-color: white ;
+  color:#cec3c4 ;`;
 }
 const th = document.getElementsByTagName("th");
 for (var elem of th) {
