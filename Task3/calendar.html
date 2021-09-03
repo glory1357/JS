@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>calendar</title>
+    <style>
+table {
+    text-align: center;
+}
+
+th {
+    padding: 10px;
+}
+
+td {
+    padding: 3px;
+    background-color: #eeeeee;
+}
+
+th {
+    background-color: red;
+}
+
+#lastDay,
+#nextDay {
+    background-color: white;
+    color: #cec3c4;
+}
+
+tr>td:nth-last-child(2),
+tr>td:nth-last-child(1) {
+    background-color: #787878;
+    color: white
+}
+
+button {
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    font-size: 15px
+}
+    </style>
+</head>
+<body>
+    <div id="calendar"></div>
+
+    <script>
+       var year=prompt("Введите год","");
+       while(isNaN(year)||year%1!=0){
+        year=prompt("Введите год","");
+        }
+    if(year){
+     var month=prompt("Введите номер месяца","");
+     while(isNaN(month)||month%1!=0||month>12||month<1){
+        month=prompt("Введите номер месяца","");
+        }
+     if(!month){
+         month=1;
+     }
+    }
+    function createCalendar(elem, year, month) {
+
+    var mon = month - 1; 
+    var d = new Date(year, mon);
+    var monthWord = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+    for (var i = 0; i < monthWord.length; i++) {
+        if (mon === i) {
+            monthWord = monthWord[i];
+        }
+    }
+    var table = '<table><tr><th><button id="yearBack"><<</button></th><th><button id="monthBack"><</button></th><th colspan="3">' + monthWord + " " + year + " " + 'года</th><th><button id="monthNext">></button></th><th><button id="yearNext">>></button></th></tr><tr><th>пн</th><th>вт</th><th>ср</th><th>чт</th><th>пт</th><th>сб</th><th>вс</th></tr><tr>';
+
+    var lastDay = new Date(year, mon - 1, 0).getDate() - getDay(d) + 1;
+    for (var i = 0; i < getDay(d); i++) {
+        table += '<td id="lastDay">' + lastDay + '</td>';
+        lastDay++;
+    }
+
+    while (d.getMonth() === mon) {
+        table += '<td>' + d.getDate() + '</td>';
+
+        if (getDay(d) === 6) { 
+            table += '</tr><tr>';
+        }
+
+        d.setDate(d.getDate() + 1);
+    }
+
+    if (getDay(d) != 0) {
+        var count = 1;
+        for (var i = getDay(d); i < 7; i++) {
+            table += '<td id="nextDay">' + count + '</td>';
+            count++;
+        }
+    }
+
+    table += '</tr></table>';
+
+    elem.innerHTML = table;
+
+    var yearBack = document.getElementById('yearBack');
+    yearBack.onclick = function() {
+        year--;
+        createCalendar(calendar, year, month)
+    }
+
+    var yearNext = document.getElementById('yearNext');
+    yearNext.onclick = function() {
+        year++;
+        createCalendar(calendar, year, month)
+    }
+    var monthBack = document.getElementById('monthBack');
+    monthBack.onclick = function() {
+        month--;
+        createCalendar(calendar, year, month)
+    }
+    var monthNext = document.getElementById('monthNext');
+    monthNext.onclick = function() {
+        month++;
+        createCalendar(calendar, year, month)
+    }
+
+}
+
+function getDay(date) { 
+    var day = date.getDay();
+    if (day === 0) day = 7; 
+    return day - 1;
+}
+createCalendar(calendar, year, month);
+if(year===null|| year ===''){
+    createCalendar(calendar, 2021, 9);
+}
+
+
+
+const table = document.querySelector('table')
+table.style.textAlign = "center";
+const buttons = document.querySelectorAll('button')
+for (var elem of buttons) {
+    elem.style.cssText = `border:none;
+  border-radius:5px;
+  background-color: white;
+  font-size:15px`;
+}
+const td = document.getElementsByTagName("td");
+for (var elem of td) {
+    elem.style.cssText = `padding:3px;
+  background-color:#eeeeee; `
+}
+const tdLast = document.querySelectorAll('tr>td:nth-last-child(2),tr>td:nth-last-child(1)')
+for (var elem of tdLast) {
+    elem.style.cssText = `background-color: #787878;
+  color: white`;
+}
+const lastDayId = document.getElementsByClassName("lastDay");
+for (var elem of lastDayId) {
+    elem.style.cssText = `background-color: white;
+  color:#cec3c4;`;
+}
+const nextDayId = document.getElementsByClassName("nextDay");
+for (var elem of nextDayId) {
+    elem.style.cssText = `background-color: white;
+  color:#cec3c4;`;
+}
+const th = document.getElementsByTagName("th");
+for (var elem of th) {
+    elem.style.cssText = `background-color: red;
+  padding:10px;`
+}
+
+    </script>
+</body>
+</html>
