@@ -114,30 +114,24 @@ button {
     var monthBack = document.getElementById('monthBack');
     monthBack.onclick = function() {
         month--;
+        if(month<1){
+            month=12;
+            year--;
+        }
         createCalendar(calendar, year, month)
     }
     var monthNext = document.getElementById('monthNext');
     monthNext.onclick = function() {
         month++;
+        if(month>12){
+            month=1;
+            year++;
+        }
         createCalendar(calendar, year, month)
     }
+    const tableStyle = document.querySelector('table')
 
-}
-
-function getDay(date) { 
-    var day = date.getDay();
-    if (day === 0) day = 7; 
-    return day - 1;
-}
-createCalendar(calendar, year, month);
-if(year===null|| year ===''){
-    createCalendar(calendar, 2021, 9);
-}
-
-
-
-const table = document.querySelector('table')
-table.style.textAlign = "center";
+tableStyle.style.textAlign = "center";
 const buttons = document.querySelectorAll('button')
 for (var elem of buttons) {
     elem.style.cssText = `border:none;
@@ -148,7 +142,7 @@ for (var elem of buttons) {
 const td = document.getElementsByTagName("td");
 for (var elem of td) {
     elem.style.cssText = `padding:3px;
-  background-color:#eeeeee; `
+  background-color:#eeeeee; `;
 }
 const tdLast = document.querySelectorAll('tr>td:nth-last-child(2),tr>td:nth-last-child(1)')
 for (var elem of tdLast) {
@@ -170,6 +164,21 @@ for (var elem of th) {
     elem.style.cssText = `background-color: red;
   padding:10px;`
 }
+}
+
+function getDay(date) { 
+    var day = date.getDay();
+    if (day === 0) day = 7; 
+    return day - 1;
+}
+createCalendar(calendar, year, month);
+if(year===null|| year ===''){
+    createCalendar(calendar, 2021, 9);
+}
+
+
+
+
 
     </script>
 </body>
