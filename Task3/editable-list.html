@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>editable-list</title>
+</head>
+<body>
+    
+
+    <script>
+  var array = ['Первый пункт', 'Второй пункт', 'Третий пункт', 'Четвертый пункт', 'Пятый пункт']
+
+function editableList(arr) {
+    var ol = document.createElement('ol');
+    document.body.append(ol);
+    for (var i = 0; i < array.length; i++) {
+        var li = document.createElement('li');
+        li.style.cssText = `padding: 5px;`
+        li.textContent = array[i];
+        ol.append(li);
+    }
+    var input = document.createElement('input');
+    input.placeholder = "Введите значение";
+    input.style.cssText = `border-radius: 5px;
+  margin: 5px;`
+    document.body.append(input);
+
+    var buttonAdd = document.createElement('button');
+    buttonAdd.textContent = 'Add';
+    buttonAdd.style.cssText = `border-radius: 5px;
+  margin: 5px;
+  background-color: white;`
+    document.body.append(buttonAdd);
+
+    var buttonRemove = document.createElement('button');
+    buttonRemove.textContent = 'Remove';
+    buttonRemove.style.cssText = `border-radius: 5px;
+  margin: 5px;
+  background-color: white;`;
+    document.body.append(buttonRemove);
+
+    buttonAdd.onclick = function() {
+        buttonRemove.disabled = false;
+        var value = input.value;
+        if (value) {
+            var liLast = document.createElement('li');
+            liLast.style.cssText = `padding: 5px;`
+            liLast.innerHTML = value;
+            ol.append(liLast);
+            input.value = '';
+
+        }
+    }
+
+
+
+    var liLength = document.getElementsByTagName("li");
+
+    buttonRemove.onclick = function() {
+        for (var liPoints of liLength) {}
+        liPoints.remove();
+        if (liLength.length === 0) {
+            buttonRemove.disabled = true;
+        }
+
+    }
+
+    const olClick = document.querySelector("ol");
+    olClick.addEventListener("click", clickLi);
+
+    function clickLi(event) {
+        var target = event.target;
+        var texts = target.textContent;
+        if (target.tagName != 'LI') return;
+        target.innerHTML = `<input id="tex" type='text' value='${texts}'>`;
+        var inputLi = document.getElementById("tex");
+        inputLi.focus();
+        inputLi.addEventListener("blur", function() {
+            target.innerHTML = inputLi.value;
+        });
+    }
+
+
+}
+editableList(array);
+    </script>
+</body>
+</html>
