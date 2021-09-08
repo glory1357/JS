@@ -195,11 +195,11 @@ var monthValue =monthSelect.value;
      redClick(ev);
     })
     function redClick(td) {
-  if (selectedTd) { // убрать существующую подсветку, если есть
+  if (selectedTd) { 
     selectedTd.classList.remove('redClick');
   }
   selectedTd = td;
-  selectedTd.classList.add('redClick'); // подсветить новый td
+  selectedTd.classList.add('redClick');
 }
   
     

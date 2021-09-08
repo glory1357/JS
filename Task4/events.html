@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>events</title>
+</head>
+<body>
+    <a href="https://www.youtube.com/watch?v=yThtmE0_yX4" title="Ми-ми-мишки"> Ссылка 1</a><br>
+    <a href="https://www.youtube.com/watch?v=uTdz1QhSRIQ" title="Буба"> Ссылка 2</a><br>
+    <a href="https://www.youtube.com/watch?v=oQQjeqzRl4k" title="Щенячий патруль"> Ссылка 3</a><br>
+<hr>
+<input class='input1' type = 'text' value = 'Текст1'><br></input>
+<input class='input1' type = 'text' value = 'Текст2'><br></input>
+<input class='input1' type = 'text' value = 'Текст3'><br></input>
+<p>20</p>
+<p>10</p>
+<p>3</p>
+<p>5</p>
+<hr>
+<input class='input2' type = 'text' value = 'Текст1' data-length = "6"><br></input>
+<input class='input2' type = 'text' value = 'Текст2' data-length = '2'><br></input>
+<input class='input2' type = 'text' value = 'Текст3' data-length = '20'><br></input>
+<input class='input2' type = 'text' value = 'Текст4' data-length = '10'><br></input>
+
+    <script>
+        const a = document.querySelectorAll('a');
+for (var elem of a) {
+	elem.addEventListener("mouseover", aOver, {
+		once: true
+	})
+
+	function aOver(event) {
+		var aEvent = event.target;
+		aEvent.innerHTML = `${aEvent.title} (${aEvent.href})`;
+	}
+}
+
+
+const input1 = document.querySelectorAll('.input1');
+for (var elem of input1) {
+	elem.style.margin = '5px';
+	elem.addEventListener('click', (event) => {
+		event.target.focus();
+	});
+	elem.addEventListener('blur', (event) => {
+		console.log(event.target.value);
+	}, {
+		once: true
+	});
+}
+
+
+const p = document.querySelectorAll('p');
+for (var elem of p) {
+	elem.addEventListener('click', (event) => {
+		var sqr = event.target.textContent;
+		event.target.textContent = sqr ** 2;
+	}, {
+		once: true
+	})
+}
+
+
+const input2 = document.querySelectorAll('.input2');
+for (var elem of input2) {
+	elem.style.margin = '5px';
+	elem.addEventListener('click', (event) => {
+		event.target.focus();
+	});
+	elem.addEventListener('blur', (event) => {
+		var count = event.target.value.length;
+		console.log(count)
+		var dataLength = +(event.target.dataset.length);
+		console.log(dataLength)
+		if (count === dataLength) {
+			event.target.style.border = 'solid green';
+		} else {
+			event.target.style.border = 'solid red';
+		}
+
+	});
+}
+    </script>
+</body>
+</html>
