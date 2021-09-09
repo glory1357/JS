@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+
+        class Vehicle{
+  constructor(name, year){
+    this.name = name;
+    this.year = year;
+  }
+  getName(){return(`Модель: ${this.name}`); }
+  getYear(){return (`Год выпуска: ${this.year}`);}
+  getInfo(){console.log(`${this.getName()}. ${this.getYear()}`);}
+  
+}
+const car = new Vehicle("автомобиль на пару", 1912);
+
+class Car extends Vehicle{
+  constructor(name, year, ifSunRoof = false){
+  super(name,year);
+  this.sunRoof = ifSunRoof;
+    
+  }
+  hasSunRoof(){
+    return (this.sunRoof ? "В машине есть люк" : "В машине люка нет");
+  }
+  getInfo(){
+    const maxSpeed = 160;
+    const wheels = 4;
+    function getMaxSpeed() {
+    return (`${maxSpeed} km/h`);
+     }
+    console.log(`${this.getName()}
+${this.getYear()}
+Колес: ${wheels}
+Макс. скорость: ${getMaxSpeed()}`);
+     }
+  }
+
+class Moto extends Vehicle{
+  
+}
+class Driver{
+  constructor(name, age){
+    this.name = name;
+    this.age = age;
+  }
+  displayInfo(){console.log(`Водитель: ${this.name}; возраст: ${this.age}`);}
+  driveCar(car){console.log(`${this.name} работает на ${car.name} ${car.year} года выпуска`);}
+}
+
+const audi = new Car("Audi A8", 2018, true);
+const bmw = new Car("BMW X6", 2021);
+const yamaha = new Moto("Yamaha R250", 2020);
+const driverVasya = new Driver("Василий", 31);
+const driverDenis = new Driver("Денис", 48);
+// driverVasya.displayInfo();
+// driverDenis.displayInfo();
+driverVasya.driveCar(yamaha);
+driverDenis.driveCar(bmw);
+
+    </script>
+</body>
+</html>
