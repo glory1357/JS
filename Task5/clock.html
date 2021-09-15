@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>clock.html</title>
+
+    <style>
+ body {
+        margin: 0;
+        padding: 0px;
+    }
+
+.parant{
+            position: relative;
+            height: 200px;
+            width: 200px;
+            text-align: center;
+            background: #fcca66;
+            border-radius: 50%;
+            
+        }
+.green{
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: #48b382;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+.line {
+        position: absolute;
+        border: 1px black solid;
+        border-radius: 1px;
+        position: absolute;
+        z-index: 1;
+        transform-origin:5px 0px;
+        border-radius:10px;
+    }
+
+#line2{
+  border: 2px black solid;
+}
+#line3{
+  border: 3px black solid;
+}
+    </style>
+</head>
+<body>
+    
+    <!-- <div>
+        <div id="line" class="line"></div>
+        <div id="line2" class="line"></div>
+        <div id="line3" class="line"></div>
+      <div class = "green" id = "div1"></div>
+      <div class = "green" id = "div2"></div>
+      <div class = "green" id = "div3"></div>
+      <div class = "green" id = "div4"></div>
+      <div class = "green" id = "div5"></div>
+      <div class = "green" id = "div6"></div>
+      <div class = "green" id = "div7"></div>
+      <div class = "green" id = "div8"></div>
+      <div class = "green" id = "div9"></div>
+      <div class = "green" id = "div10"></div>
+      <div class = "green" id = "div11"></div>
+      <div class = "green" id = "div12"></div>
+      </div> -->
+
+<script>
+const divParant = document.createElement('div');
+const div1 = document.createElement('div');
+const div2 = document.createElement('div');
+const div3 = document.createElement('div');
+const div4 = document.createElement('div');
+const div5 = document.createElement('div');
+const div6 = document.createElement('div');
+const div7 = document.createElement('div');
+const div8 = document.createElement('div');
+const div9 = document.createElement('div');
+const div10 = document.createElement('div');
+const div11 = document.createElement('div');
+const div12 = document.createElement('div');
+const line = document.createElement('div');
+const line2 = document.createElement('div');
+const line3 = document.createElement('div');
+var date = new Date();
+var secCount = date.getSeconds() * 6 - 90;
+var minCount = date.getMinutes() * 6 - 90;
+var hoursCount = date.getHours() * 5 * 6 - 90;
+var radius = 80;
+var angle = 30;
+
+document.body.append(divParant);
+divParant.append(div1);
+divParant.append(div2);
+divParant.append(div3);
+divParant.append(div4);
+divParant.append(div5);
+divParant.append(div6);
+divParant.append(div7);
+divParant.append(div8);
+divParant.append(div9);
+divParant.append(div10);
+divParant.append(div11);
+divParant.append(div12);
+divParant.append(line);
+divParant.append(line2);
+divParant.append(line3);
+
+divParant.classList.add('parant');
+
+var divsGreen = document.querySelectorAll('.parant div:nth-child(-n+12)');
+for(var elem of divsGreen){
+  elem.classList.add('green');
+}
+
+line.classList.add('line');
+line2.classList.add('line');
+line3.classList.add('line');
+line2.id = 'line2';
+line3.id = 'line3';
+
+var divParantX = divParant.offsetLeft / 2 + divParant.offsetWidth / 2;
+var divParantY = divParant.offsetTop / 2 + divParant.offsetHeight / 2;
+
+for (var i = 0; i < divsGreen.length; i++) {
+    var angleRadians = parseFloat(angle) / 180 * Math.PI;
+
+    var greenCenterX = divParantX + radius * Math.sin(angleRadians);
+    var greenCenterY = divParantY - radius * Math.cos(angleRadians);
+
+    divsGreen[i].style.left = Math.round(greenCenterX - divsGreen[i].offsetWidth / 2) + "px";
+    divsGreen[i].style.top = Math.round(greenCenterY - divsGreen[i].offsetHeight / 2) + "px";
+    angle += 30;
+}
+
+line.style.width = radius + "px";
+line.style.left = Math.round(divParantY) + "px";
+line.style.top = Math.round(divParantX - 1) + "px";
+line.style.transform = "rotate(" + (date.getSeconds() * 6 - 90) + "deg)";
+
+line2.style.width = radius - 10 + "px";
+line2.style.left = Math.round(divParantY) + "px";
+line2.style.top = Math.round(divParantX - 1) + "px";
+line2.style.transform = "rotate(" + (minCount) + "deg)";
+
+line3.style.width = radius - 30 + "px";
+line3.style.left = Math.round(divParantY) + "px";
+line3.style.top = Math.round(divParantX - 1) + "px";
+line3.style.transform = "rotate(" + (hoursCount) + "deg)";
+
+var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+var k = 0;
+for (k; k < array.length; k++) {
+    for (var j = 0; j < divsGreen.length; j++) {
+        divsGreen[j].textContent = array[k];
+        k++;
+    }
+}
+setInterval(() => {
+    secCount += 6;
+    line.style.transform = "rotate(" + (secCount) + "deg)";
+    if (secCount === 276) {
+        minCount += 6;
+        line2.style.transform = "rotate(" + (minCount) + "deg)";
+        if (minCount === 276) {
+            hoursCount += 6;
+            line3.style.transform = "rotate(" + (hoursCount) + "deg)";
+            minCount = -84;
+            if (hoursCount === 276) {
+                hoursCount = -84;
+            }
+        }
+        secCount = -84;
+    }
+}, 1000)
+
+
+
+
+
+// div1.style.cssText=(`left: 45%;
+//     top: 5%`);
+// div2.style.cssText=(`left: 65%;
+//     top: 11%;`);
+// div3.style.cssText=(`left: 79%;
+//     top: 26%;`);
+// div4.style.cssText=(`left: 85%;
+//     top: 45%;`);
+// div5.style.cssText=(`left: 80%;
+//     top: 65%;`);
+// div6.style.cssText=(`left: 65%;
+//     top: 80%;`);
+// div7.style.cssText=(`left: 45%;
+//     top: 85%;`);
+// div8.style.cssText=(`left: 25%;
+//     top: 80%;`);
+// div9.style.cssText=(`left: 12%;
+//     top: 65%;`);
+// div10.style.cssText=(`left: 5%;
+//     top: 45%;`);
+// div11.style.cssText=(`left: 85%;
+//     top: 45%;`);
+// div12.style.cssText=(`left: 85%;
+//     top: 45%;`);
+</script>
+
+</body>
+</html>
