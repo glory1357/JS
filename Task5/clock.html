@@ -7,7 +7,7 @@
     <title>clock.html</title>
 
     <style>
- body {
+body {
         margin: 0;
         padding: 0px;
     }
@@ -34,7 +34,6 @@
 .line {
         position: absolute;
         border: 1px black solid;
-        border-radius: 1px;
         position: absolute;
         z-index: 1;
         transform-origin:5px 0px;
@@ -152,12 +151,12 @@ line3.style.left = Math.round(divParantY) + "px";
 line3.style.top = Math.round(divParantX - 1) + "px";
 line3.style.transform = "rotate(" + (hoursCount) + "deg)";
 
-var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+// var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-var k = 0;
-for (k; k < array.length; k++) {
+// var k = 0;
+for (var k=1; k < 13; k++) {
     for (var j = 0; j < divsGreen.length; j++) {
-        divsGreen[j].textContent = array[k];
+        divsGreen[j].textContent = k;
         k++;
     }
 }
@@ -178,6 +177,7 @@ setInterval(() => {
         secCount = -84;
     }
 }, 1000)
+
 
 
 
