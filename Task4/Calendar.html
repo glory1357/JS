@@ -35,7 +35,7 @@
      <div id="calendar"></div>
 
     <script>
-        const buttonCreate = document.createElement('button');
+ const buttonCreate = document.createElement('button');
   buttonCreate.textContent = 'Создать';
 const header = document.querySelector('header');
 header.append(buttonCreate);
@@ -153,11 +153,17 @@ var monthValue =monthSelect.value;
     var monthBack = document.querySelectorAll('.monthBack');
     for (var elem of monthBack) {
     elem.onclick = function() {
-        month--;
-        if(month<1){
-            month=12;
+      month--;
+      if(month<=0){
+            month=11;
             year--;
         }
+       for(var i=1; i<=monthSelects.length;i++){
+      if( month===i){
+        monthValue = monthSelects[i];
+        
+      }
+    }
         createCalendar(year, month)
     }
     }
@@ -165,9 +171,16 @@ var monthValue =monthSelect.value;
     var monthNext = document.querySelectorAll('.monthNext');
     for (var elem of monthNext) {
     elem.onclick = function() {
+      for(var i=0; i<monthSelects.length;i++){
+      if( month===i){
+        i++;
+        monthValue = monthSelects[i];
+        
+      }
+    }
         month++;
-        if(month>12){
-            month=1;
+        if(month>11){
+            month=0;
             year++;
         }
         createCalendar( year, month)
@@ -195,11 +208,11 @@ var monthValue =monthSelect.value;
      redClick(ev);
     })
     function redClick(td) {
-  if (selectedTd) { 
+  if (selectedTd) { // убрать существующую подсветку, если есть
     selectedTd.classList.remove('redClick');
   }
   selectedTd = td;
-  selectedTd.classList.add('redClick');
+  selectedTd.classList.add('redClick'); // подсветить новый td
 }
   
     
@@ -246,6 +259,10 @@ function getDay(date) {
     if (day === 0) day = 7; 
     return day - 1;
 }
+
+
+
+
 
     </script>
 </body>
