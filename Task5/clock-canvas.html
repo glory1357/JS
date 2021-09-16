@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>clock-canvas.html</title>
+</head>
+<body>
+    <canvas id="clock" width="300" height="300"></canvas>
+
+    <script>
+const drawclock = function() {
+    const canvasClock = document.getElementById("clock");
+
+    if (canvasClock && canvasClock.getContext("2d")) {
+        let ctx = canvasClock.getContext("2d");
+        var centerW = parseFloat(canvasClock.getAttribute("width") / 2);
+        var centerH = parseFloat(canvasClock.getAttribute("height") / 2);
+
+        clockAnim();
+
+        requestAnimationFrame(clockAnim);
+
+        function clockAnim() {
+            var radius = 120;
+            var angle = 30;
+            var date = new Date();
+            var sec = date.getSeconds();
+            var min = date.getMinutes();
+            var hours = date.getHours();
+            var secCount = sec * 6;
+            var minCount = min * 6;
+            var hoursCount = hours * 5 * 6;
+
+            ctx.strokeStyle = "#fcca66";
+            ctx.fillStyle = "#fcca66";
+            ctx.lineWidth = 1;
+
+            ctx.beginPath();
+            ctx.arc(centerW, centerH, 150, 0, 360);
+            ctx.fill();
+            ctx.stroke();
+
+
+            for (i = 1; i <= 12; i++) {
+                ctx.strokeStyle = "#48b382";
+                ctx.fillStyle = "#48b382";
+                var angleRadians = parseFloat(angle) / 180 * Math.PI;
+                var greenCenterX = centerW + radius * Math.sin(angleRadians);
+                var greenCenterY = centerH - radius * Math.cos(angleRadians);
+                var text = i;
+                ctx.beginPath();
+                ctx.arc(greenCenterX, greenCenterY, 19, 0, 360);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = 'black';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = "20px Georgia";
+                ctx.fillText(text, greenCenterX, greenCenterY);
+                angle += 30;
+            }
+
+            var textClock;
+            ((hours < 10 && min < 10 && sec < 10) && (textClock = `0${hours}:0${min}:0${sec}`)) || ((hours < 10 && min < 10) && (textClock = `0${hours}:0${min}:${sec}`)) || ((sec < 10 && min < 10) && (textClock = `${hours}0:${min}:0${sec}`)) || ((sec < 10 && hours < 10) && (textClock = `0${hours}:${min}:0${sec}`)) || ((sec < 10) && (textClock = `${hours}:${min}:0${sec}`)) || ((min < 10) && (textClock = `${hours}:0${min}:${sec}`)) || ((hours < 10) && (textClock = `0${hours}:${min}:${sec}`));
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = "30px Georgia";
+            ctx.fillText(textClock, centerW, centerH - 70);
+
+            ctx.save();
+
+            ctx.lineCap = "round";
+            ctx.globalAlpha = 0.8;
+            ctx.strokeStyle = 'black';
+            ctx.beginPath();
+            ctx.translate(centerW, centerH);
+            ctx.rotate((Math.PI / 180) * secCount);
+            ctx.translate(-centerW, -centerH);
+            ctx.lineWidth = 2;
+            ctx.moveTo(centerW, centerH);
+            ctx.lineTo(centerW, centerH - 120);
+            ctx.stroke();
+
+            ctx.resetTransform();
+
+            ctx.beginPath();
+            ctx.translate(centerW, centerH);
+            ctx.rotate((Math.PI / 180) * minCount);
+            ctx.translate(-centerW, -centerH);
+            ctx.lineWidth = 4;
+            ctx.moveTo(centerW, centerH);
+            ctx.lineTo(centerW, centerH - 100);
+            ctx.stroke();
+
+            ctx.resetTransform();
+
+            ctx.beginPath();
+            ctx.translate(centerW, centerH);
+            ctx.rotate((Math.PI / 180) * hoursCount);
+            ctx.translate(-centerW, -centerH);
+            ctx.lineWidth = 5;
+            ctx.moveTo(centerW, centerH);
+            ctx.lineTo(centerW, centerH - 80);
+            ctx.stroke();
+            ctx.resetTransform();
+            ctx.restore();
+
+            requestAnimationFrame(clockAnim);
+        }
+    }
+}
+drawclock();
+    </script>
+</body>
+</html>
