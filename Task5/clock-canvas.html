@@ -18,6 +18,7 @@ const drawclock = function() {
         var centerW = parseFloat(canvasClock.getAttribute("width") / 2);
         var centerH = parseFloat(canvasClock.getAttribute("height") / 2);
 
+      
         clockAnim();
 
         requestAnimationFrame(clockAnim);
@@ -63,8 +64,17 @@ const drawclock = function() {
                 angle += 30;
             }
 
-            var textClock;
-            ((hours < 10 && min < 10 && sec < 10) && (textClock = `0${hours}:0${min}:0${sec}`)) || ((hours < 10 && min < 10) && (textClock = `0${hours}:0${min}:${sec}`)) || ((sec < 10 && min < 10) && (textClock = `${hours}0:${min}:0${sec}`)) || ((sec < 10 && hours < 10) && (textClock = `0${hours}:${min}:0${sec}`)) || ((sec < 10) && (textClock = `${hours}:${min}:0${sec}`)) || ((min < 10) && (textClock = `${hours}:0${min}:${sec}`)) || ((hours < 10) && (textClock = `0${hours}:${min}:${sec}`));
+          var secF = function(){
+            return (sec < 10 ? '0' : '') + sec;
+           }
+          var minF = function(){
+            return (min < 10 ? '0' : '') + min;
+           }
+          var hoursF = function(){
+            return (hours < 10 ? '0' : '') + hours;
+           }
+            var textClock = `${hoursF()}:${minF()}:${secF()}`;
+          
             ctx.fillStyle = 'black';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
