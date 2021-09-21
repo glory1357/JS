@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ping-pong_dom.html</title>
+    <style>
+        #ball{
+  position:absolute;
+  background:#f02137;
+  width: 30px;
+  height: 30px;
+  border-radius:50%;
+/*   display:none; */
+}
+#leftRacket{
+  background:green;
+  position:absolute;
+  border-radius:40%;
+}
+.rigthRacket{
+  background:blue;
+  position:absolute;
+  border-radius:40%;
+
+}
+
+#button{
+display: inline-block;
+margin-bottom:10px;
+}
+#count{
+display: inline-block;
+  margin-left:160px;
+  font-size:40px;
+}
+#counterDiv{
+  position:absolute;
+  display:none;
+  left:230px;
+  top:100px;
+  font-size: 70px;
+}
+
+#GameOver{
+  position:absolute;
+  font-size:80px;
+left: 0;
+right: 0;
+  top:70px;
+  display:none;
+text-align: center;
+  text-shadow: 
+    0 1px 0 #ccc, 
+    0 2px 0 #c9c9c9, 
+    0 3px 0 #bbb, 
+    0 4px 0 #b9b9b9, 
+    0 5px 0 #aaa, 
+    0 6px 1px rgba(0,0,0,.1), 
+    0 0 5px rgba(0,0,0,.1), 
+    0 1px 3px rgba(0,0,0,.3), 
+    0 3px 5px rgba(0,0,0,.2), 
+    0 5px 10px rgba(0,0,0,.25), 
+    0 10px 10px rgba(0,0,0,.2), 
+    0 20px 20px rgba(0,0,0,.15);
+}
+    </style>
+</head>
+<body>
+    <script>
+        const widthDiv = 500;
+const heightDiv = 300;
+const widthBall = 30;
+const heightBall = 30;
+const max = 15;
+const min = 8;
+const RacketHeight = 100;
+const Racketwidth = 10;
+var countLeft = 0;
+var countRigth = 0;
+var counter = 3;
+var speedX;
+var speedY;
+var interval;
+var intervalTick;
+
+const button = document.createElement('button');
+const divHead = document.createElement('div');
+const divBall = document.createElement('div');
+const leftRacket = document.createElement('div');
+const rigthRacket = document.createElement('div');
+const countDiv = document.createElement('div');
+const countSpanLeft = document.createElement('span');
+const countSpanRigth = document.createElement('span');
+const counterDiv = document.createElement('div');
+const GameOver = document.createElement('div');
+
+button.id = 'button';
+button.textContent = 'Старт!';
+document.body.append(button);
+
+countDiv.id = 'count';
+countDiv.textContent = countLeft + ':' + countRigth;
+document.body.append(countDiv);
+
+
+divHead.style.cssText = `width: ${widthDiv}px;
+height: ${heightDiv}px;
+position:relative;
+background: #f0ee7e;
+border: 1px solid;`;
+document.body.append(divHead);
+
+counterDiv.id = 'counterDiv';
+divHead.append(counterDiv);
+
+GameOver.id = 'GameOver';
+GameOver.textContent = 'GameOver';
+divHead.append(GameOver);
+
+rigthRacket.className = 'rigthRacket';
+rigthRacket.style.left = widthDiv - 10 + 'px';
+rigthRacket.style.width = Racketwidth + 'px';
+// leftRacket.style.top=150+'px';
+rigthRacket.style.height = RacketHeight + 'px';
+divHead.append(rigthRacket);
+
+leftRacket.id = 'leftRacket';
+leftRacket.style.width = Racketwidth + 'px';
+leftRacket.style.height = RacketHeight + 'px';
+divHead.append(leftRacket);
+
+
+rigthRacketObject = {
+    posX: parseFloat(rigthRacket.style.left),
+    posY: 0,
+    speedY: 15,
+    width: Racketwidth,
+    height: RacketHeight,
+    update: function() {
+        rigthRacket.style.top = this.posY + 'px';
+
+    }
+
+}
+leftRacketObject = {
+    posX: 0,
+    posY: 0,
+    speedY: 15,
+    width: Racketwidth,
+    height: RacketHeight,
+    update: function() {
+        leftRacket.style.top = this.posY + 'px';
+
+    }
+}
+
+divBall.id = 'ball';
+
+divBall.style.left = widthDiv / 2 + 'px';
+divBall.style.top = heightDiv / 2 + 'px';
+divBall.style.display = 'none';
+divHead.append(divBall);
+
+(Math.random() <= 0.5) ? (speedX = Math.floor(Math.random() * (max - min)) + min) : speedX = -(Math.floor(Math.random() * (max - min)) + min);
+(Math.random() <= 0.5) ? (speedY = Math.floor(Math.random() * (max - min)) + min) : speedY = -(Math.floor(Math.random() * (max - min)) + min);
+
+var ball = {
+    posX: widthDiv / 2,
+    posY: heightDiv / 2,
+    speedX: speedX,
+    speedY: speedY,
+    angle: Math.random() * 360,
+    width: widthBall,
+    height: heightBall,
+    update: function() {
+        divBall.style.left = this.posX + 'px';
+        divBall.style.top = this.posY + 'px';
+
+    }
+}
+
+var areaHead = {
+    width: widthDiv,
+    height: heightDiv,
+}
+
+
+function start() {
+    divBall.style.display = 'block';
+    GameOver.style.display = 'none';
+    document.body.addEventListener('keydown', onRacketHandler, true);
+
+    function onRacketHandler(event) {
+        if (event.ctrlKey) {
+            leftRacketObject.posY += leftRacketObject.speedY;
+
+            if (leftRacketObject.posY > (heightDiv - RacketHeight)) {
+                leftRacketObject.posY = heightDiv - RacketHeight;
+            }
+        }
+        if (event.key === 'Shift') {
+            leftRacketObject.posY -= leftRacketObject.speedY;
+
+            if (leftRacketObject.posY < 0) {
+                leftRacketObject.posY = 0;
+            }
+        }
+        if (event.key === 'ArrowDown') {
+            // rigthRacket.classList.add('bounce-1');
+            rigthRacketObject.posY += rigthRacketObject.speedY;
+
+            if (rigthRacketObject.posY > (heightDiv - RacketHeight)) {
+                rigthRacketObject.posY = heightDiv - RacketHeight;
+            }
+        }
+        if (event.key === 'ArrowUp') {
+            rigthRacketObject.posY -= rigthRacketObject.speedY;
+
+            if (rigthRacketObject.posY < 0) {
+                rigthRacketObject.posY = 0;
+            }
+        }
+        rigthRacketObject.update();
+        leftRacketObject.update();
+    }
+
+    document.body.addEventListener('keyup', onRacketHandler, false)
+
+
+    divBall.style.display = 'block';
+    intervalTick = setInterval(tick, 40);
+
+}
+
+
+function tick() {
+
+    ball.posX += ball.speedX;
+    ball.posY += ball.speedY;
+
+    if (ball.posX + ball.width > rigthRacketObject.posX && (ball.posY + ball.height > rigthRacketObject.posY && ball.posY < rigthRacketObject.posY + rigthRacketObject.height)) {
+        ball.speedX = -ball.speedX;
+        ball.posX = areaHead.width - rigthRacketObject.width - ball.width;
+    }
+
+    if (ball.posX < leftRacketObject.posX + leftRacketObject.width && (ball.posY + ball.height > leftRacketObject.posY && ball.posY < leftRacketObject.posY + leftRacketObject.height)) {
+        ball.speedX = -ball.speedX;
+        ball.posX = leftRacketObject.width;
+    }
+
+
+    if (ball.posX + ball.width > areaHead.width) {
+        ball.speedX = -ball.speedX;
+        countRigth++;
+        ball.posX = areaHead.width - ball.width;
+        clearInterval(intervalTick);
+        timer();
+        setTimeout(() => {
+            ball.posX = widthDiv / 2;
+        }, 1000);
+
+
+
+    }
+    if (ball.posX < 0) {
+        countLeft++;
+        ball.speedX = -ball.speedX;
+        ball.posX = 0;
+        clearInterval(intervalTick);
+        timer();
+        setTimeout(() => {
+            ball.posX = widthDiv / 2;
+        }, 1000);
+    }
+
+
+    countDiv.textContent = countLeft + ':' + countRigth;
+    if (countLeft === 5 || countRigth === 5) {
+        clearInterval(interval);
+        clearInterval(intervalTick);
+        divBall.style.display = 'none';
+        counterDiv.style.display = 'none';
+        GameOver.style.display = 'block';
+        countLeft = 0;
+        countRigth = 0;
+
+    }
+
+    if (ball.posY + ball.height > areaHead.height) {
+        ball.speedY = -ball.speedY;
+        ball.posY = areaHead.height - ball.height;
+    }
+
+    if (ball.posY < 0) {
+        ball.speedY = -ball.speedY;
+        ball.posY = 0;
+    }
+    ball.update();
+}
+
+
+
+function timer() {
+    counterDiv.style.display = 'block';
+    counterDiv.textContent = counter;
+    if (counter === 0) {
+        clearInterval(interval);
+        counterDiv.style.display = 'none';
+        intervalTick = setInterval(tick, 40);
+        counter = 3;
+    } else {
+        interval = setTimeout(timer, 1000);
+        counter--;
+    }
+
+}
+
+button.addEventListener('click', start);
+// --------------мячик--------------
+
+// start()// This is just a sample script. Paste your real code (javascript or HTML) here.
+
+if ('this_is' == /an_example/) {
+    of_beautifier();
+} else {
+    var a = b ? (c % d) : e[f];
+}
+    </script>
+</body>
+</html>
