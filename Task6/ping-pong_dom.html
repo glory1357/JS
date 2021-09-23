@@ -12,7 +12,7 @@
   width: 30px;
   height: 30px;
   border-radius:50%;
-/*   display:none; */
+transform: translateZ(0);
 }
 #leftRacket{
   background:green;
@@ -69,7 +69,7 @@ text-align: center;
 </head>
 <body>
     <script>
-        const widthDiv = 500;
+ const widthDiv = 500;
 const heightDiv = 300;
 const widthBall = 30;
 const heightBall = 30;
@@ -84,6 +84,10 @@ var speedX;
 var speedY;
 var interval;
 var intervalTick;
+var rightPressedTop = false;
+var leftPressedTop = false;
+var rightPressedBottom = false;
+var leftPressedBottom = false;
 
 const button = document.createElement('button');
 const divHead = document.createElement('div');
@@ -135,11 +139,11 @@ divHead.append(leftRacket);
 rigthRacketObject = {
     posX: parseFloat(rigthRacket.style.left),
     posY: 0,
-    speedY: 15,
+    speedY: 10,
     width: Racketwidth,
     height: RacketHeight,
     update: function() {
-        rigthRacket.style.top = this.posY + 'px';
+        rigthRacket.style.transform = 'translateY(' + rigthRacketObject.posY + 'px)';
 
     }
 
@@ -147,7 +151,7 @@ rigthRacketObject = {
 leftRacketObject = {
     posX: 0,
     posY: 0,
-    speedY: 15,
+    speedY: 10,
     width: Racketwidth,
     height: RacketHeight,
     update: function() {
@@ -171,7 +175,7 @@ var ball = {
     posY: heightDiv / 2,
     speedX: speedX,
     speedY: speedY,
-    angle: Math.random() * 360,
+    boost: 1.05,
     width: widthBall,
     height: heightBall,
     update: function() {
@@ -188,77 +192,81 @@ var areaHead = {
 
 
 function start() {
+    countLeft = 0;
+    countRigth = 0;
+    ball.posX = widthDiv / 2;
+    ball.posY = heightDiv / 2;
+    counterDiv.style.display = 'none';
+    clearInterval(interval);
+    if (intervalTick) {
+        clearInterval(intervalTick);
+    }
     divBall.style.display = 'block';
     GameOver.style.display = 'none';
-    document.body.addEventListener('keydown', onRacketHandler, true);
-
-    function onRacketHandler(event) {
-        if (event.ctrlKey) {
-            leftRacketObject.posY += leftRacketObject.speedY;
-
-            if (leftRacketObject.posY > (heightDiv - RacketHeight)) {
-                leftRacketObject.posY = heightDiv - RacketHeight;
-            }
-        }
-        if (event.key === 'Shift') {
-            leftRacketObject.posY -= leftRacketObject.speedY;
-
-            if (leftRacketObject.posY < 0) {
-                leftRacketObject.posY = 0;
-            }
-        }
-        if (event.key === 'ArrowDown') {
-            // rigthRacket.classList.add('bounce-1');
-            rigthRacketObject.posY += rigthRacketObject.speedY;
-
-            if (rigthRacketObject.posY > (heightDiv - RacketHeight)) {
-                rigthRacketObject.posY = heightDiv - RacketHeight;
-            }
-        }
-        if (event.key === 'ArrowUp') {
-            rigthRacketObject.posY -= rigthRacketObject.speedY;
-
-            if (rigthRacketObject.posY < 0) {
-                rigthRacketObject.posY = 0;
-            }
-        }
-        rigthRacketObject.update();
-        leftRacketObject.update();
-    }
-
-    document.body.addEventListener('keyup', onRacketHandler, false)
-
-
     divBall.style.display = 'block';
+    document.addEventListener("keydown", keyDownHandler, false);
+    document.addEventListener("keyup", keyUpHandler, false);
     intervalTick = setInterval(tick, 40);
 
 }
 
-
 function tick() {
+    if (leftPressedBottom === true) {
+        leftRacketObject.posY += leftRacketObject.speedY;
+
+        if (leftRacketObject.posY > (heightDiv - RacketHeight)) {
+            leftRacketObject.posY = heightDiv - RacketHeight;
+        }
+    }
+    if (leftPressedTop === true) {
+        leftRacketObject.posY -= leftRacketObject.speedY;
+
+        if (leftRacketObject.posY < 0) {
+            leftRacketObject.posY = 0;
+        }
+    }
+    if (rightPressedBottom === true) {
+
+        rigthRacketObject.posY += rigthRacketObject.speedY;
+
+        if (rigthRacketObject.posY > (heightDiv - RacketHeight)) {
+            rigthRacketObject.posY = heightDiv - RacketHeight;
+        }
+    }
+    if (rightPressedTop === true) {
+        rigthRacketObject.posY -= rigthRacketObject.speedY;
+
+        if (rigthRacketObject.posY < 0) {
+            rigthRacketObject.posY = 0;
+        }
+    }
+    rigthRacketObject.update();
+    leftRacketObject.update();
+
 
     ball.posX += ball.speedX;
     ball.posY += ball.speedY;
 
     if (ball.posX + ball.width > rigthRacketObject.posX && (ball.posY + ball.height > rigthRacketObject.posY && ball.posY < rigthRacketObject.posY + rigthRacketObject.height)) {
-        ball.speedX = -ball.speedX;
+        ball.speedX = -ball.speedX * ball.boost;
         ball.posX = areaHead.width - rigthRacketObject.width - ball.width;
     }
 
     if (ball.posX < leftRacketObject.posX + leftRacketObject.width && (ball.posY + ball.height > leftRacketObject.posY && ball.posY < leftRacketObject.posY + leftRacketObject.height)) {
-        ball.speedX = -ball.speedX;
+        ball.speedX = -ball.speedX * ball.boost;
         ball.posX = leftRacketObject.width;
     }
 
 
     if (ball.posX + ball.width > areaHead.width) {
-        ball.speedX = -ball.speedX;
+        ball.speedX = speedX;
         countRigth++;
         ball.posX = areaHead.width - ball.width;
         clearInterval(intervalTick);
         timer();
         setTimeout(() => {
             ball.posX = widthDiv / 2;
+            ball.posY = heightDiv / 2;
         }, 1000);
 
 
@@ -266,12 +274,13 @@ function tick() {
     }
     if (ball.posX < 0) {
         countLeft++;
-        ball.speedX = -ball.speedX;
+        ball.speedX = speedX;
         ball.posX = 0;
         clearInterval(intervalTick);
         timer();
         setTimeout(() => {
             ball.posX = widthDiv / 2;
+            ball.posY = heightDiv / 2;
         }, 1000);
     }
 
@@ -280,7 +289,9 @@ function tick() {
     if (countLeft === 5 || countRigth === 5) {
         clearInterval(interval);
         clearInterval(intervalTick);
-        divBall.style.display = 'none';
+        setTimeout(() => {
+            divBall.style.display = 'none'
+        }, 0)
         counterDiv.style.display = 'none';
         GameOver.style.display = 'block';
         countLeft = 0;
@@ -318,14 +329,50 @@ function timer() {
 }
 
 button.addEventListener('click', start);
-// --------------мячик--------------
 
-// start()// This is just a sample script. Paste your real code (javascript or HTML) here.
 
-if ('this_is' == /an_example/) {
-    of_beautifier();
-} else {
-    var a = b ? (c % d) : e[f];
+
+
+function keyDownHandler(event) {
+    switch (event.key) {
+        case "ArrowUp":
+            rightPressedTop = true;
+            break;
+
+        case "ArrowDown":
+            rightPressedBottom = true;
+            break;
+
+        case "Shift":
+            leftPressedTop = true;
+            break;
+
+        case "Control":
+            leftPressedBottom = true;
+            break;
+
+    }
+}
+
+function keyUpHandler(event) {
+    switch (event.key) {
+        case "ArrowUp":
+            rightPressedTop = false;
+            break;
+
+        case "ArrowDown":
+            rightPressedBottom = false;
+            break;
+
+        case "Shift":
+            leftPressedTop = false;
+            break;
+
+        case "Control":
+            leftPressedBottom = false;
+            break;
+
+    }
 }
     </script>
 </body>
