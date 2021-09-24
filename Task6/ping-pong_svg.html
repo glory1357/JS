@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ping-pong_svg.html</title>
+    <style>
+        #button{
+display: inline-block;
+margin-bottom:10px;
+}
+svg{
+  background:#f0ee7e;
+  border: 1px solid;
+}
+#count{
+display: inline-block;
+  margin-left:160px;
+  font-size:40px;
+}
+    </style>
+</head>
+<body>
+    <svg id="svg" height="300" width="500" ></svg>
+
+    <script>
+        const svgNS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("svg");
+const w = parseFloat(svg.getAttributeNS(null, "width"));
+const h = parseFloat(svg.getAttributeNS(null, "height"));
+const widthBall = 30;
+const heightBall = 30;
+const RacketHeight = 100;
+const Racketwidth = 10;
+const max = 6;
+const min = 4;
+var countLeft = 0;
+var countRigth = 0;
+var counter = 3;
+var speedX = 6;
+var speedY;
+var posYLeftRacket = 0;
+var posYRigthRacket = 0;
+var posXLeftRacket = 0;
+var posXRigthRacket = w - Racketwidth;
+var interval;
+var intervalTick;
+var rightPressedTop = false;
+var leftPressedTop = false;
+var rightPressedBottom = false;
+var leftPressedBottom = false;
+
+const button = document.createElement('button');
+const countDiv = document.createElement('div');
+
+countDiv.id = 'count';
+countDiv.textContent = countLeft + ':' + countRigth;
+document.body.prepend(countDiv);
+
+button.id = 'button';
+button.textContent = 'Старт!';
+document.body.prepend(button);
+
+let rigthRacket = document.createElementNS(svgNS, "rect");
+let leftRacket = document.createElementNS(svgNS, 'rect');
+let circle = document.createElementNS(svgNS, 'circle');
+var text = document.createElementNS(svgNS, "text");
+
+rigthRacket.setAttributeNS(null, "x", w - Racketwidth);
+rigthRacket.setAttributeNS(null, "y", posYRigthRacket);
+rigthRacket.setAttributeNS(null, "fill", "#f02137");
+rigthRacket.setAttributeNS(null, "width", Racketwidth);
+rigthRacket.setAttributeNS(null, "height", RacketHeight);
+
+leftRacket.setAttributeNS(null, "x", posXLeftRacket);
+leftRacket.setAttributeNS(null, "y", posYLeftRacket);
+leftRacket.setAttributeNS(null, "fill", "blue");
+leftRacket.setAttributeNS(null, "width", Racketwidth);
+leftRacket.setAttributeNS(null, "height", RacketHeight);
+
+circle.setAttributeNS(null, 'cx', w / 2);
+circle.setAttributeNS(null, 'cy', h / 2);
+circle.setAttributeNS(null, 'r', 15);
+circle.setAttributeNS(null, "fill", "#9c27b0");
+
+text.setAttributeNS(null, "x", w / 2);
+text.setAttributeNS(null, "y", h / 2);
+text.setAttributeNS(null, "font-size", 50);
+text.setAttributeNS(null, "text-anchor", 'middle');
+text.setAttributeNS(null, "heigth", 'auto');
+
+svg.append(rigthRacket);
+svg.append(leftRacket);
+svg.append(circle);
+svg.append(text);
+
+
+(Math.random() <= 0.5) ? (speedX = Math.floor(Math.random() * (max - min)) + min) : speedX = -(Math.floor(Math.random() * (max - min)) + min);
+(Math.random() <= 0.5) ? (speedY = Math.floor(Math.random() * (max - min)) + min) : speedY = -(Math.floor(Math.random() * (max - min)) + min);
+
+var rigthRacketObject = {
+    posX: posXRigthRacket,
+    posY: posYRigthRacket,
+    speedY: 15,
+    width: Racketwidth,
+    height: RacketHeight,
+    update: function() {
+        rigthRacket.setAttribute("transform", "translate(0," + this.posY + ")");
+
+    }
+
+}
+
+var leftRacketObject = {
+    posX: posXLeftRacket,
+    posY: posYLeftRacket,
+    speedY: 15,
+    width: Racketwidth,
+    height: RacketHeight,
+    update: function() {
+        leftRacket.setAttribute("transform", "translate(0," + this.posY + ")");
+
+    }
+}
+
+var ball = {
+    posX: w / 2,
+    posY: h / 2,
+    speedX: speedX,
+    speedY: speedY,
+    radius: 15,
+    boost: 1.05,
+    angle: 20,
+    update: function() {
+        circle.setAttributeNS(null, 'cx', this.posX);
+        circle.setAttributeNS(null, 'cy', this.posY);
+
+    }
+}
+
+function start() {
+
+    document.addEventListener("keydown", keyDownHandler, false);
+    document.addEventListener("keyup", keyUpHandler, false);
+
+    countLeft = 0;
+    countRigth = 0;
+    ball.posX = w / 2;
+    ball.posY = h / 2;
+    clearInterval(interval);
+    if (intervalTick) {
+        cancelAnimationFrame(intervalTick);
+    }
+    text.textContent = "";
+    intervalTick = requestAnimationFrame(drowPingPong);
+}
+
+function drowPingPong() {
+    intervalTick = requestAnimationFrame(drowPingPong);
+    if (leftPressedBottom === true) {
+        leftRacketObject.posY += leftRacketObject.speedY;
+
+        if (leftRacketObject.posY > (h - RacketHeight)) {
+            leftRacketObject.posY = h - RacketHeight;
+        }
+    }
+    if (leftPressedTop === true) {
+        leftRacketObject.posY -= leftRacketObject.speedY;
+
+        if (leftRacketObject.posY < 0) {
+            leftRacketObject.posY = 0;
+        }
+    }
+    if (rightPressedBottom === true) {
+
+        rigthRacketObject.posY += rigthRacketObject.speedY;
+
+        if (rigthRacketObject.posY > (h - RacketHeight)) {
+            rigthRacketObject.posY = h - RacketHeight;
+
+        }
+    }
+    if (rightPressedTop === true) {
+        rigthRacketObject.posY -= rigthRacketObject.speedY;
+
+        if (rigthRacketObject.posY < 0) {
+            rigthRacketObject.posY = 0;
+        }
+    }
+    rigthRacketObject.update();
+    leftRacketObject.update();
+
+    ball.posX += ball.speedX;
+    ball.posY += ball.speedY;
+
+    if (ball.posX + ball.radius > rigthRacketObject.posX && (ball.posY + ball.radius > rigthRacketObject.posY && ball.posY - ball.radius < rigthRacketObject.posY + rigthRacketObject.height)) {
+        ball.speedX = -ball.speedX * ball.boost;
+        ball.posX = w - rigthRacketObject.width - ball.radius;
+    }
+
+    if (ball.posX - ball.radius < leftRacketObject.posX + leftRacketObject.width && (ball.posY + ball.radius > leftRacketObject.posY && ball.posY - ball.radius < leftRacketObject.posY + leftRacketObject.height)) {
+        ball.speedX = -ball.speedX * ball.boost;
+        ball.posX = leftRacketObject.width + ball.radius;
+    }
+
+
+    if (ball.posX + ball.radius > w) {
+        ball.speedX = speedX;
+        countRigth++;
+        ball.posX = w - ball.radius;
+        cancelAnimationFrame(intervalTick);
+        timer();
+        setTimeout(() => {
+            ball.posX = w / 2;
+            ball.posY = h / 2;
+        }, 1000);
+
+
+
+    }
+    if (ball.posX - ball.radius < 0) {
+        countLeft++;
+        ball.speedX = speedX;
+        ball.posX = ball.radius;
+        cancelAnimationFrame(intervalTick);
+        timer();
+        setTimeout(() => {
+            ball.posX = w / 2;
+            ball.posY = h / 2;
+        }, 1000);
+    }
+
+
+    countDiv.textContent = countLeft + ':' + countRigth;
+    if (countLeft === 5 || countRigth === 5) {
+        clearInterval(interval);
+        cancelAnimationFrame(intervalTick);
+        text.textContent = "Game Over";
+        countLeft = 0;
+        countRigth = 0;
+
+    }
+
+    if (ball.posY + ball.radius > h) {
+        ball.speedY = -ball.speedY;
+        ball.posY = h - ball.radius;
+    }
+
+    if (ball.posY - ball.radius < 0) {
+        ball.speedY = -ball.speedY;
+        ball.posY = ball.radius;
+    }
+    ball.update();
+
+}
+
+
+function timer() {
+    text.textContent = counter;
+    if (counter === 0) {
+        clearInterval(interval);
+        text.textContent = "";
+        (Math.random() <= 0.5) ? speedX = speedX: speedX = -speedX;
+        (Math.random() <= 0.5) ? speedY = speedY: speedY = -speedY;
+        intervalTick = requestAnimationFrame(drowPingPong);
+        counter = 3;
+    } else {
+        interval = setTimeout(timer, 1000);
+        counter--;
+    }
+
+}
+
+button.addEventListener('click', start);
+
+function keyDownHandler(event) {
+    switch (event.key) {
+        case "ArrowUp":
+            rightPressedTop = true;
+            break;
+
+        case "ArrowDown":
+            rightPressedBottom = true;
+            break;
+
+        case "Shift":
+            leftPressedTop = true;
+            break;
+
+        case "Control":
+            leftPressedBottom = true;
+            break;
+
+    }
+}
+
+function keyUpHandler(event) {
+    switch (event.key) {
+        case "ArrowUp":
+            rightPressedTop = false;
+            break;
+
+        case "ArrowDown":
+            rightPressedBottom = false;
+            break;
+
+        case "Shift":
+            leftPressedTop = false;
+            break;
+
+        case "Control":
+            leftPressedBottom = false;
+            break;
+
+    }
+}
+    </script>
+</body>
+</html>
