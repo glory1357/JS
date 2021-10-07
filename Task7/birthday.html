@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>birthday.html</title>
+    <style>
+        body {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+	height: 80vh;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.6);
+}
+.modal {
+  display: block;
+  width: 600px;
+  max-width: 100%;
+  max-height: 100%;
+  position: fixed;
+  z-index: 100;
+  left: 50%;
+  top: 50%;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  background: white;
+  box-shadow: 0 0 60px 10px rgba(0, 0, 0, 0.9);
+}
+.modal_closed {
+  display: none;
+}
+
+input {
+  border: 1px gray solid;
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin: 0 10px;
+  font-size: 14px;
+  font-family: "Exo 2", sans-serif;
+}
+
+ .input_date {
+  width: 80px;
+  text-align: center;
+}
+
+.modal__cancel {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+  float: right;
+  width: 150px;
+  height: 30px;
+   margin: 20px;
+
+}
+
+.modal__cancel:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.modal__cancel:active {
+  background-color: #bd2130;
+  border-color: #b21f2d;
+}
+
+ .modal__save {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: #fff;
+  float: right;
+  width: 150px;
+  height: 30px;
+  margin: 20px;
+
+}
+
+.modal__save:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.modal__save:active {
+  background-color: #1e7e34;
+  border-color: #1c7430;
+}
+
+.divHi{
+  text-align: center;
+  color:#46239c;
+  font-size: 27px;
+  margin-top: 110px;
+}
+.divHi_closed {
+  display: none;
+}
+
+    </style>
+</head>
+<body>
+    
+
+    <script>
+
+var interval;
+var flag = true;
+var dateNow = new Date;
+var month;
+var days;
+var hour;
+var sec;
+var divModalOverlay = document.createElement('div');
+divModalOverlay.classList.add('modal-overlay');
+document.body.append(divModalOverlay);
+
+var divModal = document.createElement('div');
+divModal.classList.add('modal');
+document.body.append(divModal);
+
+var h2 = document.createElement('h2');
+h2.textContent = 'Введите данные';
+h2.style.cssText = `text-align: center;
+font-size: 40px;`
+divModal.append(h2);
+
+var divName = document.createElement('div');
+divModal.append(divName);
+
+var labelName = document.createElement('label');
+labelName.textContent = 'Ваше имя:';
+labelName.style.cssText = `margin-left:20px;
+font-size: 20px;`
+divName.append(labelName);
+
+var inputName = document.createElement('input');
+inputName.setAttribute('type', 'text');
+labelName.append(inputName);
+
+var divDate = document.createElement('div');
+divDate.style.cssText = `margin-top:20px;
+font-size: 20px;`;
+divModal.append(divDate);
+
+var labelDate = document.createElement('label');
+labelDate.textContent = 'Ваш день рождения:';
+labelDate.style.cssText = `margin-left:20px;
+font-size: 20px;`
+divDate.append(labelDate);
+
+var inputDate = document.createElement('input');
+inputDate.setAttribute('type', 'number');
+inputDate.setAttribute('placeholder', 'День');
+inputDate.classList.add('input_date');
+divDate.append(inputDate);
+
+var inputMonth = document.createElement('input');
+inputMonth.setAttribute('type', 'number');
+inputMonth.setAttribute('placeholder', 'Месяц');
+inputMonth.classList.add('input_date');
+divDate.append(inputMonth);
+
+var inputYear = document.createElement('input');
+inputYear.setAttribute('type', 'number');
+inputYear.setAttribute('placeholder', 'Год');
+inputYear.classList.add('input_date');
+divDate.append(inputYear);
+
+var btnSave = document.createElement('button');
+btnSave.classList.add('modal__save');
+btnSave.textContent = 'Сохранить данные'
+divModal.append(btnSave);
+
+var btnCancel = document.createElement('button');
+btnCancel.classList.add('modal__cancel');
+btnCancel.textContent = 'Отмена'
+divModal.append(btnCancel);
+
+var divHi = document.createElement('div');
+divHi.classList.add('divHi');
+divHi.classList.add('divHi_closed');
+document.body.append(divHi);
+
+var h1User = document.createElement('h1');
+divHi.append(h1User);
+var aUser = document.createElement('a');
+divHi.append(aUser);
+
+
+
+if (window.localStorage.getItem("user")) {
+    var user2 = JSON.parse(window.localStorage.getItem("user"));
+    divModalOverlay.classList.add('modal_closed');
+    divModal.classList.add('modal_closed');
+    divHi.classList.remove('divHi_closed');
+    h1User.textContent = `Привет, ${user2.Name}!`;
+
+    function date() {
+
+        if ((+user2.Month == dateNow.getMonth() + 1) && dateNow.getDate() == user2.Day) {
+            aUser.textContent = `С Днем рождения!!!`;
+            flag = false;
+        } else {
+
+            if ((+user2.Month >= dateNow.getMonth() + 1) && dateNow.getDate() < (+user2.Day)) {
+                month = (+user2.Month) - (dateNow.getMonth() + 1);
+                days = +user2.Day - dateNow.getDate();
+            } else {
+                month = 12 - (dateNow.getMonth() + 1) + (+user2.Month);
+                days = new Date(dateNow.getFullYear(), dateNow.getMonth() + 1, 0).getDate() - dateNow.getDate();
+            }
+
+            hour = 24 - dateNow.getHours();
+
+            minutes = 60 - dateNow.getMinutes();
+
+            sec = 60 - dateNow.getSeconds();
+
+            aUser.textContent = `До Вашего дня рождения осталось: 
+${month} мес. 
+${days} дн.
+${hour} час.
+${minutes} мин. 
+${sec} сек.`;
+        }
+        if (flag) {
+            interval = setTimeout(date, 1000);
+        };
+    }
+
+    date();
+};
+
+btnSave.addEventListener('click', createStorage);
+
+function createStorage(e) {
+    var user = {
+        Name: inputName.value,
+        Day: inputDate.value,
+        Month: inputMonth.value,
+        Year: inputYear.value,
+    }
+    if (user.Day > 0 && user.Day <= (new Date(dateNow.getFullYear(), dateNow.getMonth() + 1, 0).getDate()) && user.Month > 0 && user.Month < 12 && user.Year.length === 4) {
+        window.localStorage.setItem('user', JSON.stringify(user));
+        divModalOverlay.classList.add('modal_closed');
+        divModal.classList.add('modal_closed');
+    } else {
+        h2.textContent = 'Введите правльно данные';
+    }
+
+}
+    </script>
+</body>
+</html>
