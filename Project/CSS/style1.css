@@ -1,0 +1,324 @@
+* {
+    padding: 0;
+    margin: 0;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box; }
+  
+  body {
+    background-color: #897b66;
+   font-family: 'Balsamiq Sans', cursive;
+    background-image: url('../img/snow.png'), url('../img/snow3.png'), url('../img/snow2.png');
+      -webkit-animation: snow 20s linear infinite;
+      -moz-animation: snow 20s linear infinite;
+      -ms-animation: snow 20s linear infinite;
+      animation: snow 20s linear infinite;
+  }
+  
+  @keyframes snow {
+      0% {background-position: 0px 0px, 0px 0px, 0px 0px;}
+      100% {background-position: 500px 1000px, 400px 400px, 300px 300px;}
+  }
+  
+  @-moz-keyframes snow {
+      0% {background-position: 0px 0px, 0px 0px, 0px 0px;}
+      100% {background-position: 500px 1000px, 400px 400px, 300px 300px;}
+  }
+  
+  @-webkit-keyframes snow {
+      0% {background-position: 0px 0px, 0px 0px, 0px 0px;}
+      50% {background-color:#b4cfe0;}
+      100% {background-position: 500px 1000px, 400px 400px, 300px 300px; background-color:#6b92b9;}
+  }
+  
+  @-ms-keyframes snow {
+      0% {background-position: 0px 0px, 0px 0px, 0px 0px;}
+      100% {background-position: 500px 1000px, 400px 400px, 300px 300px;}
+  }
+  
+  
+  .container {
+    background-color: #ffe9a8;
+    width: 500px;
+    height: 100vh;
+    margin: auto;
+    padding-bottom: 15px;
+    position: relative; }
+  
+  header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    align-items: center;
+   }
+    header h1 {
+      font-size: 75px;
+      color: #ffa722; }
+    header .countDiv {
+      display: flex;
+      width: 120px;
+      border-radius: 10px;
+      height: 50px;
+      background: #ffd094;
+      flex-direction: column;
+      justify-content: center; }
+    header .recordDiv {
+      display: flex;
+      width: 120px;
+      height: 50px;
+      border-radius: 10px;
+      background: #ffd094;
+       flex-direction: column;
+      justify-content: center; }
+  
+      .mainMenuDiv{
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+        align-items: center;
+      }
+      .mainMenuDiv .menuDiv{
+          width: 100%;
+          margin-right: 10px;
+          margin-left: 10px;
+          height: 50px;
+          border-radius: 20px;
+          color: #ffffff;
+          background: -moz-linear-gradient(
+            top,
+            #42aaff 0%,
+            #003366);
+          background: -webkit-gradient( linear, left top, left bottom, from(#ffe9c8), to(#ff860d));
+          -moz-border-radius: 10px;
+          -webkit-border-radius: 10px;
+          border: 1px solid #003366;
+          -moz-box-shadow:
+            0px 1px 3px rgba(000,000,000,0.5),
+            inset 0px 0px 1px rgba(255,255,255,0.5);
+          -webkit-box-shadow:
+            0px 1px 3px rgba(000,000,000,0.5),
+            inset 0px 0px 1px rgba(255,255,255,0.5);
+          box-shadow:
+            0px 1px 3px rgba(000,000,000,0.5),
+            inset 0px 0px 1px rgba(255,255,255,0.5);
+          text-shadow:
+            0px -1px 0px rgba(000,000,000,0.7),
+            0px 1px 0px rgba(255,255,255,0.3);
+            }
+  
+    .mainMenuDiv .menuDiv a {
+        text-decoration: none;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+      justify-content: center;
+  }
+  .mainMenuDiv .menuDiv:hover {
+      background: -moz-linear-gradient(
+          top,
+          #ff860d 0%,
+          #ffe9c8);
+      background: -webkit-gradient(
+          linear, left top, left bottom,
+          from(#ff860d),
+          to(#ffe9c8));
+  }
+  .mainMenuDiv .menuDiv:active {
+      background: -moz-linear-gradient(
+          top,
+          #ff5200 0%,
+          #f5f0ed);
+      background: -webkit-gradient(
+    linear, left top, left bottom,
+    from(#ff5200),
+    to(#f5f0ed))
+  }
+   
+  
+      .gameDiv {      
+        background: #ffd094;;
+        margin: auto;
+        border-radius: 2%; 
+        margin-top: 10px;
+        padding-bottom: 10px;
+      }
+  
+       .gameDiv .lineDivs{
+         display: flex;
+        justify-content: center;
+       }
+  
+     .lineDivsStroke {
+      height: 100px;
+      width: 100px;
+      background: #857559d9;
+      margin: 5px;
+      border-radius: 10%;
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+  
+     .mainmenu__link .active {
+        text-decoration: none;
+        background-color: #000;
+        color: #fff;
+      }
+  
+       .menuDivContent {
+        background: #ffd094;;
+        width: 450px;
+        height: 450px;
+        margin: auto;
+        border-radius: 2%; 
+        margin-top: 10px;
+        padding-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+      }
+  
+      .menuDivContent .divsMenu{
+         width: 80%;
+        height: 50px;
+        background: #897b66;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+            }
+      .menuDivContent button{
+        background: transparent;
+        height: 100%;
+        width: 100%;
+        border-radius: 10px;
+        font-size: 20px;
+      }
+  
+    .resultsDivContent{
+      background: #ffd094;;
+        width: 450px;
+        height: 450px;
+        margin: auto;
+        border-radius: 2%; 
+        margin-top: 10px;
+        padding-bottom: 10px;
+      }
+      .newElem{
+        transition: .3s;
+        font-family: 'Patrick Hand', cursive;
+        font-size: 40px;
+      }
+  
+      .newElemScale{
+        animation: scalingNewElem 0.3s ;
+        transform: scale(0.9);
+      }
+  
+      .scale {
+    animation: scaling 0.5s ;
+    transform: scale(1);
+  }
+  
+  @keyframes scaling {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes scalingNewElem {
+    0% {
+      transform: scale(0.8);
+    }
+    50% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  
+  .modal {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    position: fixed;
+    z-index: 100;
+    left: 50%;
+    top: 50%;
+    border-radius: 10px;
+    transform: translate(-50%, -50%);
+    background: white;
+    box-shadow: 0 0 60px 10px rgba(0, 0, 0, 0.9);
+    text-align: center;
+   width: 300px;
+    height: 300px;
+    font-size: 35px;
+  }
+  
+  .modal_closed {
+    display: none;
+  }
+  
+  .modal h2{
+    font-size: 46px;
+  }
+  
+  .modal__close:hover {
+    background-color: #dc3545;
+    text-decoration: none;
+  }
+  
+  .modal__footer {
+    border-top: 1px gray solid;
+    padding: 15px;
+    margin-top: 15px;
+    position: absolute;
+      bottom: 0;
+      width: 100%;
+  }
+  
+  .modal__footer button {
+    border: 1px gray solid;
+    border-radius: 5px;
+    padding: 8px 12px;
+    margin: 0 10px;
+    font-size: 25px;
+  }
+  
+  .modal__footer .modal__NewGame {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+  }
+  
+  .modal__footer .modal__NewGame:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+  }
+  
+  .modal__footer .modal__NewGame:active {
+    background-color: #bd2130;
+    border-color: #b21f2d;
+  }
