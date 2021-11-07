@@ -7,7 +7,7 @@
   body {
     background-color: #897b66;
    font-family: 'Balsamiq Sans', cursive;
-    background-image: url('../img/snow.png'), url('../img/snow3.png'), url('../img/snow2.png');
+    background-image: url('../IMG/snow.png'), url('../IMG/snow3.png'), url('../IMG/snow2.png');
       -webkit-animation: snow 20s linear infinite;
       -moz-animation: snow 20s linear infinite;
       -ms-animation: snow 20s linear infinite;
