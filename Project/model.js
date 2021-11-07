@@ -1,20 +1,27 @@
  /* ------- begin model ------- */
  export function ModuleModel() {
+    let self = this;
     let myModuleView = null;
     let mydata = [];
     let count = 0;
-    let permitMusic=true;
-    var self = this;
-
+    let permitMusic = true;
+    let ajaxHandlerScript = "https://fe.it-academy.by/AjaxStringStorage2.php";
+    let resultsStorage;
+    let updatePassword;
+    let stringName = 'NastyaGalkina2048';
+    let nameUser;
+    
+    
     self.init = function(view) {
         myModuleView = view;
         self.newGame();
+        this.refreshMessages();
     };
-
-    self.newGame = function(){
-      count = 0;
-      myModuleView.countUpdate(count);
-       for (let i = 0; i < 4; i++) { 
+    
+    self.newGame = function() {
+        count = 0;
+        myModuleView.countUpdate(count);
+        for (let i = 0; i < 4; i++) {
             mydata[i] = [];
             for (let j = 0; j < 4; j++) {
                 mydata[i][j] = {
@@ -31,25 +38,25 @@
         self.randomNum();
         myModuleView.game(mydata);
     };
-
+    
     self.updateState = function(hashPageName) {
         myModuleView.renderContent(hashPageName);
     };
-
+    
     self.randomNum = function() { // генерация случайных чисел и присвоения начального случайного числа mydata
-
+    
         for (;;) {
             let r = Math.floor(Math.random() * 4);
             let c = Math.floor(Math.random() * 4);
             if (mydata[r][c].value === 0) { // Если значение в текущей координате в данных равно 0 или пусто, вставляем случайное число 2 или 4
                 let num = Math.random() > 0.2 ? 2 : 4; // Установленное случайное число 2 или 4 с вероятностью выпадения 80% и 20% соответственно
                 mydata[r][c].value = num;
-
+    
                 break;
             }
         }
     };
-
+    
     self.updateBottom = function() {
         for (let j = 0; j < 4; j++) {
             for (let i = 3; i > 0; i--) {
@@ -78,21 +85,21 @@
                 } else {
                     break;
                 }
-
+    
             }
         }
-
+    
         // myModuleView.gameDraw(mydata);
         for (let i = 0; i < 4; i++) {
-             if (mydata[i].find((elem) => elem.random === true || elem.scale === true)) {
-                setTimeout(()=>{
-                self.randomNum();
-                myModuleView.game(mydata);
-               },300);
+            if (mydata[i].find((elem) => elem.random === true || elem.scale === true)) {
+                setTimeout(() => {
+                    self.randomNum();
+                    myModuleView.game(mydata);
+                }, 300);
                 break;
             }
         };
-
+    
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
                 mydata[i][j].x = i;
@@ -102,12 +109,12 @@
             }
         }
         myModuleView.countUpdate(count);
-        
-        if(self.gameOver()){
-          myModuleView.gameOver(count);
+    
+        if (self.gameOver()) {
+            myModuleView.gameOver(count);
         };
     };
-
+    
     self.bottomNext = function(i, j) {
         for (var c = i - 1; c >= 0; c--) {
             if (mydata[c][j].value !== 0) {
@@ -116,7 +123,7 @@
         }
         return -1;
     };
-
+    
     self.updateTop = function() {
         for (let j = 0; j < 4; j++) {
             for (let i = 0; i < 3; i++) {
@@ -145,20 +152,20 @@
                 } else {
                     break;
                 }
-
+    
             };
         }
         // myModuleView.gameDraw(mydata);
         for (let i = 3; i >= 0; i--) {
             if (mydata[i].find((elem) => elem.random === true || elem.scale === true)) {
-                setTimeout(()=>{
-                self.randomNum();
-                myModuleView.game(mydata);
-               },300);
+                setTimeout(() => {
+                    self.randomNum();
+                    myModuleView.game(mydata);
+                }, 300);
                 break;
             }
         };
-
+    
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
                 mydata[i][j].x = i;
@@ -168,13 +175,13 @@
             }
         }
         myModuleView.countUpdate(count);
-        
-        if(self.gameOver()){
-          myModuleView.gameOver(count);
+    
+        if (self.gameOver()) {
+            myModuleView.gameOver(count);
         };
-        
+    
     };
-
+    
     self.topNext = function(i, j) {
         for (var c = i + 1; c < 4; c++) {
             if (mydata[c][j].value !== 0) {
@@ -183,9 +190,9 @@
         }
         return -1;
     };
-
+    
     self.updateLeft = function() {
-
+    
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 3; j++) {
                 var nextj = self.leftNext(i, j);
@@ -215,20 +222,20 @@
                 }
             }
         };
-
+    
         // myModuleView.gameDraw(mydata);
-
+    
         for (let i = 0; i < 4; i++) {
-             if ((mydata[i].find((elem) => elem.random === true)) || (mydata[i].find((elem) => elem.scale === true))) {
-               setTimeout(()=>{
-                self.randomNum();
-                myModuleView.game(mydata);
-               },300);
-                
+            if ((mydata[i].find((elem) => elem.random === true)) || (mydata[i].find((elem) => elem.scale === true))) {
+                setTimeout(() => {
+                    self.randomNum();
+                    myModuleView.game(mydata);
+                }, 300);
+    
                 break;
             }
         };
-
+    
         for (let i = 0; i < 4; i++) {
             for (let j = 3; j >= 0; j--) {
                 mydata[i][j].x = i;
@@ -238,12 +245,12 @@
             }
         }
         myModuleView.countUpdate(count);
-
-        if(self.gameOver()){
-          myModuleView.gameOver(count);
+    
+        if (self.gameOver()) {
+            myModuleView.gameOver(count);
         };
     };
-
+    
     self.leftNext = function(i, j) {
         for (var c = j + 1; c < 4; c++) {
             if (mydata[i][c].value !== 0) {
@@ -252,9 +259,9 @@
         }
         return -1;
     };
-
+    
     self.updateRight = function() {
-
+    
         for (let i = 0; i < 4; i++) {
             for (let j = 3; j > 0; j--) {
                 var lastj = self.rightNext(i, j);
@@ -269,7 +276,7 @@
                         mydata[i][j].x = i;
                         mydata[i][j].y = j;
                         myModuleView.audioPlay('shag');
-
+    
                         j++;
                     } else if (mydata[i][j].value === mydata[i][lastj].value) {
                         mydata[i][j].value *= 2;
@@ -285,19 +292,19 @@
                 }
             }
         };
-
+    
         // myModuleView.gameDraw(mydata);
-
+    
         for (let i = 0; i < 4; i++) {
             if ((mydata[i].find((elem) => elem.random === true)) || (mydata[i].find((elem) => elem.scale === true))) {
-                setTimeout(()=>{
-                self.randomNum();
-                myModuleView.game(mydata);
-               },300);
+                setTimeout(() => {
+                    self.randomNum();
+                    myModuleView.game(mydata);
+                }, 300);
                 break;
             }
         };
-
+    
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
                 mydata[i][j].x = i;
@@ -307,12 +314,12 @@
             }
         }
         myModuleView.countUpdate(count);
-
-        if(self.gameOver()){
-          myModuleView.gameOver(count);
+    
+        if (self.gameOver()) {
+            myModuleView.gameOver(count);
         };
     };
-
+    
     self.rightNext = function(i, j) {
         for (var c = j - 1; c >= 0; c--) {
             if (mydata[i][c].value !== 0) {
@@ -321,46 +328,159 @@
         }
         return -1;
     };
-
-    self.gameOver = function(){
+    
+    self.gameOver = function() {
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
-              if(mydata[i][j].value===0){
-                return false;
-              };
-              if(j<3){
-                if(mydata[i][j].value ===mydata[i][j+1].value){
-                  return false;
+                if (mydata[i][j].value === 0) {
+                    return false;
+                };
+                if (j < 3) {
+                    if (mydata[i][j].value === mydata[i][j + 1].value) {
+                        return false;
+                    }
+                };
+                if (i < 3) {
+                    if (mydata[i][j].value === mydata[i + 1][j].value) {
+                        return false;
+                    }
                 }
-              };
-              if(i<3){
-                if(mydata[i][j].value ===mydata[i+1][j].value){
-                  return false;
-                }
-              }
             }
         }
+        this.sendResults();
         return true;
     }
-
-    self.setMusic = function(){
-        if(permitMusic){
+    
+    self.setMusic = function() {
+        if (permitMusic) {
             myModuleView.musicPlay(permitMusic);
-            permitMusic=false;
-            
-        }else{
-        myModuleView.musicPlay(permitMusic);
-        permitMusic=true;
+            permitMusic = false;
+    
+        } else {
+            myModuleView.musicPlay(permitMusic);
+            permitMusic = true;
         }
     };
-
-    self.setAudio = function(flag){
+    
+    self.setAudio = function(flag) {
         myModuleView.audioPlay(flag);
     };
-
-    self.setName = function(name){
-      myModuleView.getName(name);
+    
+    self.setName = function(name) {
+        myModuleView.getName(name);
+        if (!name) {
+            nameUser = 'User';
+        } else {
+            nameUser = name
+        }
+    
+    };
+    
+    
+    
+    // получает сообщения с сервера и потом показывает
+    this.refreshMessages = function() {
+        $.ajax({
+            url: ajaxHandlerScript,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                f: 'READ',
+                n: stringName
+            },
+            cache: false,
+            success: this.readReady,
+            error: this.errorHandler
+        });
+    };
+    
+    this.readReady = function(callresult) { // сообщения получены - показывает
+        if (callresult.error != undefined)
+            alert(callresult.error);
+        else {
+            results = [];
+            if (callresult.result != "") { // либо строка пустая - сообщений нет
+                // либо в строке - JSON-представление массива сообщений
+                results = JSON.parse(callresult.result);
+                // вдруг кто-то сохранил мусор вместо LOKTEV_CHAT_MESSAGES?
+                if (!Array.isArray(results))
+                    results = [];
+            }
+            myModuleView.showResults(results);
+        }
     }
-}
-
-/* -------- end model -------- */
+    
+    // получает сообщения с сервера, добавляет новое,
+    // показывает и сохраняет на сервере
+    this.sendResults = function() {
+        updatePassword = Math.random();
+        $.ajax({
+            url: ajaxHandlerScript,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                f: 'LOCKGET',
+                n: stringName,
+                p: updatePassword
+            },
+            cache: false,
+            success: this.lockGetReady,
+            error: this.errorHandler
+        });
+    }
+    
+    // сообщения получены, добавляет, показывает, сохраняет
+    this.lockGetReady = function(callresult) {
+        if (callresult.error != undefined)
+            alert(callresult.error);
+        else {
+            results = [];
+            if (callresult.result != "") { // либо строка пустая - сообщений нет
+                // либо в строке - JSON-представление массива сообщений
+                results = JSON.parse(callresult.result);
+                // вдруг кто-то сохранил мусор вместо LOKTEV_CHAT_MESSAGES?
+                if (!Array.isArray(results))
+                    results = [];
+            }
+    
+            var senderName = nameUser;
+            var counts = count;
+            results.push({
+                name: senderName,
+                count: counts
+            });
+            if (results.length > 10)
+                results = results.slice(results.length - 10);
+    
+            myModuleView.showResults(results);
+    
+            $.ajax({
+                url: ajaxHandlerScript,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    f: 'UPDATE',
+                    n: stringName,
+                    v: JSON.stringify(results),
+                    p: updatePassword
+                },
+                cache: false,
+                success: this.updateReady,
+                error: this.errorHandler
+            });
+        }
+    }
+    
+    // сообщения вместе с новым сохранены на сервере
+    this.updateReady = function(callresult) {
+        if (callresult.error != undefined)
+            alert(callresult.error);
+    };
+    
+    this.errorHandler = function(jqXHR, statusStr, errorStr) {
+        alert(statusStr + ' ' + errorStr);
+    };
+    
+    };
+    
+    /* -------- end model -------- */
