@@ -6,7 +6,7 @@
     let count = 0;
     let permitMusic = true;
     let ajaxHandlerScript = "https://fe.it-academy.by/AjaxStringStorage2.php";
-    let resultsStorage;
+    let results;
     let updatePassword;
     let stringName = 'NastyaGalkina2048';
     let nameUser;

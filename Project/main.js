@@ -3,9 +3,6 @@ import {ModuleModel} from './model.js';
 import {ModuleController} from './controler.js';
 
 const mySPA = (function() {
-
-
-
     return {
         init: function() {
 
