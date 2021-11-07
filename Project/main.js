@@ -1,6 +1,6 @@
-import {ModuleView} from 'view.js';
-import {ModuleModel} from 'model.js';
-import {ModuleController} from 'controller.js';
+import {ModuleView} from './view.js';
+import {ModuleModel} from './model.js';
+import {ModuleController} from './controller.js';
 
 const mySPA = (function() {
 
