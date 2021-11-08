@@ -402,6 +402,7 @@
             if (callresult.result != "") { // либо строка пустая - сообщений нет
                 // либо в строке - JSON-представление массива сообщений
                 results = JSON.parse(callresult.result);
+                results.sort((a, b) => a.count > b.count ? -1 : 1);
                 // вдруг кто-то сохранил мусор вместо LOKTEV_CHAT_MESSAGES?
                 if (!Array.isArray(results))
                     results = [];
@@ -438,6 +439,7 @@
             if (callresult.result != "") { // либо строка пустая - сообщений нет
                 // либо в строке - JSON-представление массива сообщений
                 results = JSON.parse(callresult.result);
+                
                 // вдруг кто-то сохранил мусор вместо LOKTEV_CHAT_MESSAGES?
                 if (!Array.isArray(results))
                     results = [];
@@ -449,8 +451,10 @@
                 name: senderName,
                 count: counts
             });
+                results.sort((a, b) => a.count > b.count ? -1 : 1);
+
             if (results.length > 10)
-                results = results.slice(results.length - 10);
+                results = results.slice(0,9);
     
             myModuleView.showResults(results);
     

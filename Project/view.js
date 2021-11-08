@@ -48,7 +48,7 @@ export function ModuleView() {
         render: () => {
             contentGame.style.display = 'none';
             contentMenu.style.display = 'none';
-            contentResults.style.display = 'block';
+            contentResults.style.display = 'flex';
         }
     
     };
@@ -108,7 +108,7 @@ export function ModuleView() {
         header.append(countDiv);
     
         const recordDiv = document.createElement('div');
-        recordDiv.innerHTML = `<p>Record:</p><p>0</P>`;
+        recordDiv.innerHTML = `<p>Record:</p><p id='recordUser'>0</P>`;
         recordDiv.classList.add('recordDiv');
         header.append(recordDiv);
     
@@ -195,9 +195,9 @@ export function ModuleView() {
     
         contentResults = resultsDivContent;
     
-        const resultsUl = document.createElement('ul');
-        resultsUl.id = 'resultsUl';
-        resultsDivContent.append(resultsUl);
+        const resultsOl = document.createElement('ol');
+        resultsOl.id = 'resultsOl';
+        resultsDivContent.append(resultsOl);
     
         //--------------- Game Over-----------------
     
@@ -441,12 +441,15 @@ export function ModuleView() {
     
     this.showResults = function(results) {
         var str = '';
+        var record = 0;
         for (let i = 0; i < results.length; i++) {
             var result = results[i];
             str += "<li>" + result.name + ":" +
                 result.count + "</li>";
-        }
-        document.getElementById('resultsUl').innerHTML = str;
+        };
+        record = results[0].count;
+        document.getElementById('recordUser').innerText = record;
+        document.getElementById('resultsOl').innerHTML = str;
     };
     }
     /* -------- end view --------- */
