@@ -1,112 +1,122 @@
-/* ----- begin controller ---- */
 export function ModuleController() {
+    let self = this;
     let myModuleContainer = null;
     let myModuleModel = null;
     let startX;
     let startY;
     let endX;
     let endY;
-    
-    this.init = function(model) {
+
+    self.init = function(model) {
+        //Вешаем обработчик события, пользователь увидит запрос подтверждения на уход со страницы и его можно будет отменить
+        window.onbeforeunload = function() {
+            return true;
+        };
+
         myModuleContainer = document.querySelector('.container');
         myModuleModel = model;
-    
-        let musicBtn = myModuleContainer.querySelector('#btnMusicID');
-    
-        let menuDivs = myModuleContainer.querySelector('.mainMenuDiv');
-    
-        let btnNewGameFooter = myModuleContainer.querySelector('.modal__NewGame');
-    
-        let btnNewGameMenu = myModuleContainer.querySelector('#newGameMenu');
-    
-        let divNickSave = myModuleContainer.querySelector('#divNickSave');
-        // вешаем слушателя на событие hashchange
-        window.addEventListener("hashchange", this.updateState);
-    
-        // вешаем слушателя на события на кнопки 
-        document.addEventListener("keydown", this.keyDownHandler, false);
-    
-        document.addEventListener("touchstart", this.touchstart, false);
-    
-        document.addEventListener("touchend", this.touchend, false);
-    
-        btnNewGameFooter.addEventListener('click', myModuleModel.newGame, false);
-    
-        btnNewGameMenu.addEventListener('click', myModuleModel.newGame, false);
-    
-        musicBtn.addEventListener('click', myModuleModel.setMusic, false);
-    
-        divNickSave.addEventListener('click', this.setName, false);
-    
-        menuDivs.addEventListener('click', (event) => {
-            let target = event.target;
-            if (target.tagName != 'A') return;
-            myModuleModel.setAudio('click');
-        });
-    
-    
-    
-    
-        this.updateState(); //первая отрисовка
-    }
-    
-    this.updateState = function() {
+        //---обработчик собыйтий на кнопки в контейнере
+        myModuleContainer.addEventListener('click', self.clickButtons);
+        //----обработчик на изменение фрагмента url
+        window.addEventListener("hashchange", self.updateState);
+
+        self.updateState(); //первая отрисовка
+    };
+
+    self.updateState = function() {
         const hashPageName = location.hash.slice(1).toLowerCase();
         myModuleModel.updateState(hashPageName);
+        //----вешаем обработчики на клавиатуру и тач, если открыта страница игры и делаем отрисовку игры
+        switch (hashPageName) {
+            case 'game':
+                document.addEventListener("keydown", self.keyDownHandler);
+                document.addEventListener("touchstart", self.touchstart);
+                document.addEventListener("touchend", self.touchend);
+                myModuleModel.game();
+                break;
+        }
+
     };
-    
-    
-    this.setName = function() {
-        let divNickSave = myModuleContainer.querySelector('#divNickName');
-        let name = divNickSave.querySelector('input').value;
-        myModuleModel.setName(name);
-    }
-    
-    this.keyDownHandler = function(event) {
+
+    self.keyDownHandler = function(event) {
         switch (event.key) {
             case "ArrowUp":
-                myModuleModel.updateTop();
+                myModuleModel.moveTop();
                 break;
-    
+
             case "ArrowDown":
-                myModuleModel.updateBottom();
+                 myModuleModel.moveBottom();
                 break;
-    
+
             case "ArrowLeft":
-                myModuleModel.updateLeft();
+                myModuleModel.moveLeft();
                 break;
-    
+
             case "ArrowRight":
-                myModuleModel.updateRight();
+                myModuleModel.moveRight();
                 break;
-    
+
         }
     };
-    this.touchstart = function(event) {
+    self.touchstart = function(event) {
         startX = event.touches[0].pageX;
         startY = event.touches[0].pageY;
     };
-    
-    this.touchend = function(event) {
+
+    self.touchend = function(event) {
         ;
         endX = event.changedTouches[0].pageX;
         endY = event.changedTouches[0].pageY;
-    
+
         var x = endX - startX;
         var y = endY - startY;
-    
+
         var absX = Math.abs(x) > Math.abs(y);
         var absY = Math.abs(y) > Math.abs(x);
         if (x > 0 && absX) {
-            myModuleModel.updateRight();
+            myModuleModel.moveRight();
         } else if (x < 0 && absX) {
-            myModuleModel.updateLeft();
+            myModuleModel.moveLeft();
         } else if (y > 0 && absY) {
-            myModuleModel.updateBottom();
+            myModuleModel.moveBottom();
         } else if (y < 0 && absY) {
-            myModuleModel.updateTop();
+            myModuleModel.moveTop();
         }
     };
-    
+
+    self.clickButtons = function(event) {
+        switch (event.target) {
+            case myModuleContainer.querySelector('#btnMusicID'):
+                myModuleModel.setMusic();
+                break;
+
+            case myModuleContainer.querySelector('#btnSoundsID'):
+                myModuleModel.permitAudio();
+                break;
+
+            case myModuleContainer.querySelector('#newGameMenu'):
+                myModuleModel.newGame();
+                break;
+
+            case myModuleContainer.querySelector('#nameID'):
+                let userName = myModuleContainer.querySelector('#username').value;
+                myModuleModel.setName(userName);
+                break;
+
+            case myModuleContainer.querySelector('#sizeMinus'):
+                myModuleModel.resizeMatrix(myModuleContainer.querySelector('#sizeMinus').innerText);
+                break;
+
+            case myModuleContainer.querySelector('#sizePlus'):
+                myModuleModel.resizeMatrix(myModuleContainer.querySelector('#sizePlus').innerText);
+                break;
+
+            case myModuleContainer.querySelector('.newGame'):
+                myModuleModel.newGame();
+                break;
+        }
     };
-    /* ------ end controller ----- */
+
+
+
+}

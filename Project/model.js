@@ -4,26 +4,31 @@
     let myModuleView = null;
     let mydata = [];
     let count = 0;
+    let matrix = 4;
     let permitMusic = true;
+    let permitAudio = true;
     let ajaxHandlerScript = "https://fe.it-academy.by/AjaxStringStorage2.php";
     let results;
     let updatePassword;
     let stringName = 'NastyaGalkina2048';
-    let nameUser;
-    
-    
+    let nameUser='user';
+    let isNewGame = true;
+
+
     self.init = function(view) {
         myModuleView = view;
         self.newGame();
-        this.refreshMessages();
+        self.readInfo();
+
     };
-    
+
     self.newGame = function() {
+         isNewGame = true;
         count = 0;
         myModuleView.countUpdate(count);
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < matrix; i++) {
             mydata[i] = [];
-            for (let j = 0; j < 4; j++) {
+            for (let j = 0; j < matrix; j++) {
                 mydata[i][j] = {
                     x: i,
                     y: j,
@@ -34,41 +39,49 @@
             }
         };
         myModuleView.removeAlwaysDivs();
-        self.randomNum();
-        self.randomNum();
-        myModuleView.game(mydata);
+       //  myModuleView.createDivs(mydata);
+        
     };
-    
+
+    self.game = function() {
+      if(isNewGame){
+             self.randomNum();
+             self.randomNum();
+             isNewGame = false;
+        }
+        myModuleView.createDivs(mydata);
+    };
+
     self.updateState = function(hashPageName) {
         myModuleView.renderContent(hashPageName);
     };
-    
+
     self.randomNum = function() { // генерация случайных чисел и присвоения начального случайного числа mydata
-    
+
         for (;;) {
             let r = Math.floor(Math.random() * 4);
             let c = Math.floor(Math.random() * 4);
-            if (mydata[r][c].value === 0) { // Если значение в текущей координате в данных равно 0 или пусто, вставляем случайное число 2 или 4
+            if (mydata[r][c].value === 0) { // Если значение в текущей координате в данных равно 0, вставляем случайное число 2 или 4
                 let num = Math.random() > 0.2 ? 2 : 4; // Установленное случайное число 2 или 4 с вероятностью выпадения 80% и 20% соответственно
                 mydata[r][c].value = num;
-    
+                 myModuleView.createDiv(r,c,num);
+
                 break;
             }
         }
     };
-    
-    self.updateBottom = function() {
-        for (let j = 0; j < 4; j++) {
-            for (let i = 3; i > 0; i--) {
-                var lasti = this.bottomNext(i, j);
+    //--- двигаемся вниз
+    self.moveBottom = function() {
+        for (let j = 0; j < matrix; j++) {
+            for (let i = matrix - 1; i > 0; i--) {
+                var lasti = self.bottomNextItem(i, j);
                 if (lasti !== -1) {
                     if (mydata[i][j].value === 0) {
                         mydata[i][j].x = mydata[lasti][j].x;
-                        mydata[i][j].y = mydata[lasti][j].y;
                         mydata[i][j].value = mydata[lasti][j].value;
                         mydata[lasti][j].value = 0;
                         mydata[i][j].random = true;
-                        myModuleView.gameDraw(mydata);
+                        myModuleView.changeDivs(mydata[i][j],i,j);
                         mydata[i][j].x = i;
                         mydata[i][j].y = j;
                         myModuleView.audioPlay('shag');
@@ -77,31 +90,32 @@
                         mydata[i][j].value *= 2;
                         count += mydata[i][j].value;
                         mydata[i][j].scale = true;
-                        myModuleView.removeItem(mydata[lasti][j].x, mydata[lasti][j].y);
+                        myModuleView.removeItem(lasti,j);
                         mydata[lasti][j].value = 0;
-                        myModuleView.gameDraw(mydata);
+                        myModuleView.changeDivs(mydata[i][j],i,j);
                         myModuleView.audioPlay('xlop');
                     }
                 } else {
                     break;
                 }
-    
+
             }
         }
-    
-        // myModuleView.gameDraw(mydata);
-        for (let i = 0; i < 4; i++) {
+        
+        //----делаем проверку, если было изменение , то добавляем новое число
+        for (let i = 0; i < matrix; i++) {
             if (mydata[i].find((elem) => elem.random === true || elem.scale === true)) {
                 setTimeout(() => {
-                    self.randomNum();
-                    myModuleView.game(mydata);
+                    for (let i = 1; i <= matrix - 3; i++) {
+                        self.randomNum();
+                    }
                 }, 300);
                 break;
             }
         };
-    
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 4; j++) {
+        //----Обнуляем все свойства для последующего изменения
+        for (let i = 0; i < matrix; i++) {
+            for (let j = 0; j < matrix; j++) {
                 mydata[i][j].x = i;
                 mydata[i][j].y = j;
                 mydata[i][j].scale = false;
@@ -109,13 +123,13 @@
             }
         }
         myModuleView.countUpdate(count);
-    
+
         if (self.gameOver()) {
             myModuleView.gameOver(count);
         };
     };
-    
-    self.bottomNext = function(i, j) {
+
+    self.bottomNextItem = function(i, j) {
         for (var c = i - 1; c >= 0; c--) {
             if (mydata[c][j].value !== 0) {
                 return c;
@@ -123,11 +137,11 @@
         }
         return -1;
     };
-    
-    self.updateTop = function() {
-        for (let j = 0; j < 4; j++) {
-            for (let i = 0; i < 3; i++) {
-                var nexti = self.topNext(i, j);
+
+    self.moveTop = function() {
+        for (let j = 0; j < matrix; j++) {
+            for (let i = 0; i < matrix - 1; i++) {
+                var nexti = self.topNextItem(i, j);
                 if (nexti !== -1) {
                     if (mydata[i][j].value === 0) {
                         mydata[i][j].x = mydata[nexti][j].x;
@@ -135,7 +149,7 @@
                         mydata[i][j].value = mydata[nexti][j].value;
                         mydata[nexti][j].value = 0;
                         mydata[i][j].random = true;
-                        myModuleView.gameDraw(mydata);
+                        myModuleView.changeDivs(mydata[i][j],i,j);
                         mydata[i][j].x = i;
                         mydata[i][j].y = j;
                         myModuleView.audioPlay('shag');
@@ -146,28 +160,30 @@
                         mydata[i][j].scale = true;
                         myModuleView.removeItem(mydata[nexti][j].x, mydata[nexti][j].y);
                         mydata[nexti][j].value = 0;
-                        myModuleView.gameDraw(mydata);
+                        myModuleView.changeDivs(mydata[i][j],i,j);
                         myModuleView.audioPlay('xlop');
                     }
                 } else {
                     break;
                 }
-    
+
             };
         }
-        // myModuleView.gameDraw(mydata);
-        for (let i = 3; i >= 0; i--) {
+       //  myModuleView.changeDivs(mydata);
+
+        for (let i = matrix - 1; i >= 0; i--) {
             if (mydata[i].find((elem) => elem.random === true || elem.scale === true)) {
                 setTimeout(() => {
-                    self.randomNum();
-                    myModuleView.game(mydata);
+                    for (let i = 1; i <= matrix - 3; i++) {
+                        self.randomNum();
+                    }
                 }, 300);
                 break;
             }
         };
-    
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 4; j++) {
+
+        for (let i = 0; i < matrix; i++) {
+            for (let j = 0; j < matrix; j++) {
                 mydata[i][j].x = i;
                 mydata[i][j].y = j;
                 mydata[i][j].scale = false;
@@ -175,27 +191,27 @@
             }
         }
         myModuleView.countUpdate(count);
-    
+
         if (self.gameOver()) {
             myModuleView.gameOver(count);
         };
-    
+
     };
-    
-    self.topNext = function(i, j) {
-        for (var c = i + 1; c < 4; c++) {
+
+    self.topNextItem = function(i, j) {
+        for (var c = i + 1; c < matrix; c++) {
             if (mydata[c][j].value !== 0) {
                 return c;
             }
         }
         return -1;
     };
-    
-    self.updateLeft = function() {
-    
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 3; j++) {
-                var nextj = self.leftNext(i, j);
+
+    self.moveLeft = function() {
+
+        for (let i = 0; i < matrix; i++) {
+            for (let j = 0; j < matrix - 1; j++) {
+                var nextj = self.leftNextItem(i, j);
                 if (nextj !== -1) {
                     if (mydata[i][j].value === 0) {
                         mydata[i][j].x = mydata[i][nextj].x;
@@ -203,7 +219,7 @@
                         mydata[i][j].value = mydata[i][nextj].value;
                         mydata[i][j].random = true;
                         mydata[i][nextj].value = 0;
-                        myModuleView.gameDraw(mydata);
+                        myModuleView.changeDivs(mydata[i][j],i,j);
                         mydata[i][j].x = i;
                         mydata[i][j].y = j;
                         myModuleView.audioPlay('shag');
@@ -214,7 +230,7 @@
                         mydata[i][j].scale = true;
                         myModuleView.removeItem(mydata[i][nextj].x, mydata[i][nextj].y);
                         mydata[i][nextj].value = 0;
-                        myModuleView.gameDraw(mydata);
+                        myModuleView.changeDivs(mydata[i][j],i,j);
                         myModuleView.audioPlay('xlop');
                     }
                 } else {
@@ -222,22 +238,21 @@
                 }
             }
         };
-    
-        // myModuleView.gameDraw(mydata);
-    
-        for (let i = 0; i < 4; i++) {
+
+        for (let i = 0; i < matrix; i++) {
             if ((mydata[i].find((elem) => elem.random === true)) || (mydata[i].find((elem) => elem.scale === true))) {
                 setTimeout(() => {
-                    self.randomNum();
-                    myModuleView.game(mydata);
+                    for (let i = 1; i <= matrix - 3; i++) {
+                        self.randomNum();
+                    }
                 }, 300);
-    
+
                 break;
             }
         };
-    
-        for (let i = 0; i < 4; i++) {
-            for (let j = 3; j >= 0; j--) {
+
+        for (let i = 0; i < matrix; i++) {
+            for (let j = matrix - 1; j >= 0; j--) {
                 mydata[i][j].x = i;
                 mydata[i][j].y = j;
                 mydata[i][j].scale = false;
@@ -245,26 +260,26 @@
             }
         }
         myModuleView.countUpdate(count);
-    
+
         if (self.gameOver()) {
             myModuleView.gameOver(count);
         };
     };
-    
-    self.leftNext = function(i, j) {
-        for (var c = j + 1; c < 4; c++) {
+
+    self.leftNextItem = function(i, j) {
+        for (var c = j + 1; c < matrix; c++) {
             if (mydata[i][c].value !== 0) {
                 return c;
             }
         }
         return -1;
     };
-    
-    self.updateRight = function() {
-    
-        for (let i = 0; i < 4; i++) {
-            for (let j = 3; j > 0; j--) {
-                var lastj = self.rightNext(i, j);
+
+    self.moveRight = function() {
+
+        for (let i = 0; i < matrix; i++) {
+            for (let j = matrix - 1; j > 0; j--) {
+                var lastj = self.rightNextItem(i, j);
                 if (lastj !== -1) {
                     if (mydata[i][j].value === 0) {
                         mydata[i][j].x = mydata[i][lastj].x;
@@ -272,11 +287,11 @@
                         mydata[i][j].value = mydata[i][lastj].value;
                         mydata[i][j].random = true;
                         mydata[i][lastj].value = 0;
-                        myModuleView.gameDraw(mydata);
+                        myModuleView.changeDivs(mydata[i][j],i,j);
                         mydata[i][j].x = i;
                         mydata[i][j].y = j;
                         myModuleView.audioPlay('shag');
-    
+
                         j++;
                     } else if (mydata[i][j].value === mydata[i][lastj].value) {
                         mydata[i][j].value *= 2;
@@ -284,7 +299,7 @@
                         mydata[i][j].scale = true;
                         myModuleView.removeItem(mydata[i][lastj].x, mydata[i][lastj].y);
                         mydata[i][lastj].value = 0;
-                        myModuleView.gameDraw(mydata);
+                        myModuleView.changeDivs(mydata[i][j],i,j);
                         myModuleView.audioPlay('xlop');
                     }
                 } else {
@@ -292,21 +307,20 @@
                 }
             }
         };
-    
-        // myModuleView.gameDraw(mydata);
-    
-        for (let i = 0; i < 4; i++) {
+
+        for (let i = 0; i < matrix; i++) {
             if ((mydata[i].find((elem) => elem.random === true)) || (mydata[i].find((elem) => elem.scale === true))) {
                 setTimeout(() => {
-                    self.randomNum();
-                    myModuleView.game(mydata);
+                    for (let i = 1; i <= matrix - 3; i++) {
+                        self.randomNum();
+                    }
                 }, 300);
                 break;
             }
         };
-    
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 4; j++) {
+
+        for (let i = 0; i < matrix; i++) {
+            for (let j = 0; j < matrix; j++) {
                 mydata[i][j].x = i;
                 mydata[i][j].y = j;
                 mydata[i][j].scale = false;
@@ -314,13 +328,13 @@
             }
         }
         myModuleView.countUpdate(count);
-    
+
         if (self.gameOver()) {
             myModuleView.gameOver(count);
         };
     };
-    
-    self.rightNext = function(i, j) {
+
+    self.rightNextItem = function(i, j) {
         for (var c = j - 1; c >= 0; c--) {
             if (mydata[i][c].value !== 0) {
                 return c;
@@ -328,58 +342,86 @@
         }
         return -1;
     };
-    
+
     self.gameOver = function() {
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 4; j++) {
+        for (let i = 0; i < matrix; i++) {
+            for (let j = 0; j < matrix; j++) {
                 if (mydata[i][j].value === 0) {
                     return false;
                 };
-                if (j < 3) {
+                if (j < matrix - 1) {
                     if (mydata[i][j].value === mydata[i][j + 1].value) {
                         return false;
                     }
                 };
-                if (i < 3) {
+                if (i < matrix - 1) {
                     if (mydata[i][j].value === mydata[i + 1][j].value) {
                         return false;
                     }
                 }
             }
         }
-        this.sendResults();
+        self.updateResults();
         return true;
-    }
-    
+    };
+
+    self.resizeMatrix = function(argument) {
+        switch (argument) {
+            case '-':
+                if (matrix > 4) {
+                    matrix--;
+                    myModuleView.resizeMatrix(matrix);
+                    self.newGame();
+                }
+                break;
+
+            case '+':
+                if (matrix < 8) {
+                    matrix++;
+                    myModuleView.resizeMatrix(matrix);
+                    self.newGame();
+                }
+                break;
+        }
+    };
+
     self.setMusic = function() {
         if (permitMusic) {
             myModuleView.musicPlay(permitMusic);
             permitMusic = false;
-    
+
         } else {
             myModuleView.musicPlay(permitMusic);
             permitMusic = true;
         }
     };
-    
-    self.setAudio = function(flag) {
-        myModuleView.audioPlay(flag);
+
+
+    self.permitAudio = function() {
+        if (permitAudio) {
+            myModuleView.permitAudio(permitAudio);
+            permitAudio = false;
+        } else {
+            myModuleView.permitAudio(permitAudio);
+            permitAudio = true;
+        }
     };
-    
+
+
     self.setName = function(name) {
-        myModuleView.getName(name);
         if (!name) {
             nameUser = 'User';
         } else {
-            nameUser = name
-        }
-    
+            nameUser = name;
+        };
+        myModuleView.getName(nameUser);
+
     };
-    
-    
-    
-    // получает сообщения с сервера и потом показывает
-    this.refreshMessages = function() {
+
+
+
+    // получает информацию с сервера и показывает ее
+    self.readInfo = function() {
         $.ajax({
             url: ajaxHandlerScript,
             type: 'POST',
@@ -389,31 +431,26 @@
                 n: stringName
             },
             cache: false,
-            success: this.readReady,
-            error: this.errorHandler
+            success: self.readReady,
+            error: self.errorHandler
         });
     };
-    
-    this.readReady = function(callresult) { // сообщения получены - показывает
+
+    self.readReady = function(callresult) { // информация получена - показывает
         if (callresult.error != undefined)
             alert(callresult.error);
         else {
             results = [];
             if (callresult.result != "") { // либо строка пустая - сообщений нет
-                // либо в строке - JSON-представление массива сообщений
                 results = JSON.parse(callresult.result);
-                results.sort((a, b) => a.count > b.count ? -1 : 1);
-                // вдруг кто-то сохранил мусор вместо LOKTEV_CHAT_MESSAGES?
-                if (!Array.isArray(results))
-                    results = [];
             }
-            myModuleView.showResults(results);
+            myModuleView.showRecord(results);
         }
     }
-    
-    // получает сообщения с сервера, добавляет новое,
+
+    // получает информацию с сервера, добавляет новое,
     // показывает и сохраняет на сервере
-    this.sendResults = function() {
+    self.updateResults = function() {
         updatePassword = Math.random();
         $.ajax({
             url: ajaxHandlerScript,
@@ -425,39 +462,35 @@
                 p: updatePassword
             },
             cache: false,
-            success: this.lockGetReady,
-            error: this.errorHandler
+            success: self.lockGetReady,
+            error: self.errorHandler
         });
     }
-    
-    // сообщения получены, добавляет, показывает, сохраняет
-    this.lockGetReady = function(callresult) {
+
+    // информация получена, добавляет, показывает, сохраняет
+    self.lockGetReady = function(callresult) {
         if (callresult.error != undefined)
             alert(callresult.error);
         else {
             results = [];
             if (callresult.result != "") { // либо строка пустая - сообщений нет
-                // либо в строке - JSON-представление массива сообщений
                 results = JSON.parse(callresult.result);
-                
-                // вдруг кто-то сохранил мусор вместо LOKTEV_CHAT_MESSAGES?
-                if (!Array.isArray(results))
-                    results = [];
+
             }
-    
-            var senderName = nameUser;
+
+            var userName = nameUser;
             var counts = count;
             results.push({
-                name: senderName,
+                name: userName,
                 count: counts
             });
-                results.sort((a, b) => a.count > b.count ? -1 : 1);
+            results.sort((a, b) => a.count > b.count ? -1 : 1);
 
             if (results.length > 10)
-                results = results.slice(0,9);
-    
-            myModuleView.showResults(results);
-    
+                results = results.slice(0, 10);
+
+            myModuleView.showRecord(results);
+
             $.ajax({
                 url: ajaxHandlerScript,
                 type: 'POST',
@@ -469,22 +502,22 @@
                     p: updatePassword
                 },
                 cache: false,
-                success: this.updateReady,
-                error: this.errorHandler
+                success: self.updateReady,
+                error: self.errorHandler
             });
         }
     }
-    
-    // сообщения вместе с новым сохранены на сервере
-    this.updateReady = function(callresult) {
+
+    // информация вместе с новым сохранены на сервере
+    self.updateReady = function(callresult) {
         if (callresult.error != undefined)
             alert(callresult.error);
     };
-    
-    this.errorHandler = function(jqXHR, statusStr, errorStr) {
+
+    self.errorHandler = function(jqXHR, statusStr, errorStr) {
         alert(statusStr + ' ' + errorStr);
     };
-    
-    };
-    
-    /* -------- end model -------- */
+
+}
+
+/* -------- end model -------- */
