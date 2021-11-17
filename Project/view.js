@@ -4,6 +4,7 @@ export function ModuleView() {
     let contentContainer = null;
     let matrix = 4;
     let coords = [];
+    let sizeElem = null;
     let strResults = '';
     let countUser = 0;
     let nameUser = 'User';
@@ -13,7 +14,7 @@ export function ModuleView() {
         xlop: new Audio('Audio/xlop.mp3'),
         shag: new Audio('Audio/shag.mp3'),
     };
-    let permitSounds = true;
+
     let permitAudioModel = true;
 
     const NameComponent = {
@@ -91,12 +92,25 @@ export function ModuleView() {
         }
     };
 
+    const YouWin = {
+        id: "win",
+        title: "Win",
+        render: () => {
+            return `<div class='divGameOver'>
+           <h2>Вы выйграли!!!Поздравляем!!!</h2><p>Ваш результат: <span id='spanID'>${countUser}</span></p><a class ='modal__NewGame continueGame' href="#game">Продолжить</a>
+          <a class ='modal__NewGame newGame' href="#game">Новая игра</a>
+           </div>`
+
+        }
+
+    };
+
     const GameOver = {
-        id: "gameover",
+        id: "gover",
         title: "GameOver",
         render: () => {
             return `<div class='divGameOver'>
-           <h2>Game Over</h2><p>Ваш результат: <span id='spanID'>${countUser}</span></p><a class ='modal__NewGame newGame' href="#game">New Game</a>
+           <h2>Game Over</h2><p>Ваш результат: <span id='spanID'>${countUser}</span></p><a class ='modal__NewGame newGame' href="#game">Новая игра</a>
            </div>`
         }
 
@@ -118,8 +132,9 @@ export function ModuleView() {
         results: ResultsComponent,
         default: NameComponent,
         error: ErrorComponent,
-        gameover: GameOver,
+        gover: GameOver,
         name: NameComponent,
+        win: YouWin,
     };
 
 
@@ -194,123 +209,86 @@ export function ModuleView() {
 
         window.document.title = router[routeName].title;
         contentContainer.innerHTML = router[routeName].render();
-        if(hashPageName==='game'){
-          this.getCoords();
+        if (hashPageName === 'game') {
+            this.getCoordsElems();
         }
     };
-
-    this.getCoords = function(){
-      for (let i = 0; i < matrix; i++) {
-        coords[i] = [];
+    // получаем координаты всех дивов с ячейками и размер
+    this.getCoordsElems = function() {
+        for (let i = 0; i < matrix; i++) {
+            coords[i] = [];
             for (let j = 0; j < matrix; j++) {
-              let coordsElem = document.querySelector(`#elem`+i+j);
-              coords[i][j]={
-                elem:document.querySelector(`#elem`+i+j),
-                top:coordsElem.offsetTop,
-                left:coordsElem.offsetLeft,
-                size:coordsElem.offsetWidth,
-              }
+                let coordsElem = myModuleContainer.querySelector(`#elem` + i + j);
+                coords[i][j] = {
+                    top: coordsElem.offsetTop,
+                    left: coordsElem.offsetLeft,
+                }
             }
-      }
-      
-    }
+        }
+        let div = document.querySelector('#elem11');
+        sizeElem = div.offsetWidth;
 
+    }
+    // отрисовка всех ячеек с числами
     this.createDivs = function(mydata) {
         var divs = myModuleContainer.querySelectorAll('.lineDivsStroke');
         for (let i = 0; i < matrix; i++) {
             for (let j = 0; j < matrix; j++) {
                 if (mydata[i][j].value) {
-                    divs.forEach((elem) => {
-                        if (myModuleContainer.querySelector('#newElem' + i + j)) {} 
-                        else if (elem.id === 'elem' + i + j) {
-                           this.createDiv(i,j,mydata[i][j].value)
 
-                        }
-                    })
+                    if (myModuleContainer.querySelector('#newElem' + i + j)) {} else {
+                        this.createDiv(i, j, mydata[i][j].value)
+
+                    }
+
                 }
             }
         }
-        this.setColor();
 
     };
-
-    this.createDiv = function(r,c,num) {
-      let div = document.querySelector('#elem'+r+c)
-       let newdiv = document.createElement('div');
-              newdiv.classList.add('newElem');
-              newdiv.classList.add('newElemScale');
-              setTimeout(() => {
-             newdiv.classList.remove('newElemScale');
-                      }, 300);
-            newdiv.id = 'newElem' + r + c;
-            newdiv.style.cssText = `
-              width:${coords[r][c].size}px ;
-              height: ${coords[r][c].size}px ;`;
-                newdiv.textContent = num;
-                div.append(newdiv);
-        this.setColor();
+    // отрисовка одной ячейки с числом
+    this.createDiv = function(i, j, num) {
+        let div = document.querySelector('.gameDiv')
+        let newdiv = document.createElement('div');;
+        newdiv.classList.add('newElem');
+        newdiv.classList.add('newElemScale');
+        newdiv.dataset.color = num;
+        setTimeout(() => {
+            newdiv.classList.remove('newElemScale');
+        }, 300);
+        newdiv.id = 'newElem' + i + j;
+        newdiv.style.cssText = `
+              width:${sizeElem}px ;
+              height: ${sizeElem}px ;
+              left: ${coords[i][j].left}px;
+              top: ${coords[i][j].top}px;`;
+        newdiv.textContent = num;
+        div.append(newdiv);
 
     };
+    // передвижение ячеек
+    this.changeDivs = function(mydata, i, j, scale) {
 
-    this.changeDivs = function(mydata,i,j) {
-        // var divs = myModuleContainer.querySelectorAll('.lineDivsStroke');
-
-
-        // for (let i = 0; i < matrix; i++) {
-        //     for (let j = 0; j < matrix; j++) {
-        //         if (mydata[i][j].value) {
+        let newdiv = myModuleContainer.querySelector(`#newElem` + mydata.x + mydata.y);
 
 
-        //             divs.forEach((elem) => {
-        //                 if (elem.id === 'elem' + i + j) {
-        //                     var newdiv = myModuleContainer.querySelector(`#newElem` + mydata[i][j].x + mydata[i][j].y);
-
-        //                     newdiv.textContent = mydata[i][j].value;
-
-        //                     setTimeout(() => {
-        //                         newdiv.style.cssText = `
-        //                             left:${elem.offsetLeft}px ;
-        //                             top: ${elem.offsetTop}px ;
-        //                              width:${elem.offsetWidth}px ;
-        //                             height: ${elem.offsetHeight}px ;`;
-        //                         this.setColor();
-        //                     }, 0);
+        newdiv.style.top = `${coords[i][j].top}px`;
+        newdiv.style.left = `${coords[i][j].left}px`;
+        newdiv.dataset.color = mydata.value;
+        newdiv.textContent = mydata.value;
 
 
-        //                     if (mydata[i][j].scale) {
-        //                         newdiv.classList.add('scale');
-        //                     };
-        //                     setTimeout(() => newdiv.classList.remove('scale'), 500);
-                            
-        //                     newdiv.id = 'newElem' + i + j;
-        //                 }
-        //             })
-        //         }
-        //     }
-        // }
+        if (scale) {
+            newdiv.classList.add('scale');
 
-        
-         let newdiv = myModuleContainer.querySelector(`#newElem` + mydata.x + mydata.y);
-
-         setTimeout(() => {
-           newdiv.style.top = `${coords[i][j].top}px`;
-           newdiv.style.left = `${coords[i][j].left}px`;
-                    this.setColor();
-                }, 0);
-
-                           if (mydata.scale) {
-                                newdiv.classList.add('scale');
-                            
-                            setTimeout(() => newdiv.classList.remove('scale'), 500);
-                 }
-                            newdiv.textContent = mydata.value;
-                            newdiv.id = 'newElem' + i + j;
-        
+            setTimeout(() => newdiv.classList.remove('scale'), 500);
+        }
+        newdiv.id = 'newElem' + i + j;
 
     };
 
 
-
+    // удаление одной ненужной ячейки
     this.removeItem = function(i, j) {
         if (myModuleContainer.querySelector(`#newElem` + i + j)) {
             (myModuleContainer.querySelector(`#newElem` + i + j)).remove();
@@ -318,6 +296,7 @@ export function ModuleView() {
 
     };
 
+    // удаление всех ячеек с числами
     this.removeAlwaysDivs = function() {
         for (let i = 0; i < matrix; i++) {
             for (let j = 0; j < matrix; j++) {
@@ -327,68 +306,35 @@ export function ModuleView() {
             }
         }
     };
-
+    // отрисовка счета
     this.countUpdate = function(count) {
         let countP = myModuleContainer.querySelector('#countID');
         countP.textContent = count;
     };
-
+    // меняем значение количества клеток в меню и присваиваем значение 
     this.resizeMatrix = function(matrixModel) {
         matrix = matrixModel;
         myModuleContainer.querySelector('#sizeP').textContent = matrix;
     };
 
-    this.setColor = function() {
-        var divs = myModuleContainer.querySelectorAll('.newElem');
-        divs.forEach((elem) => {
-            switch (elem.innerText) {
-                case '2':
-                    elem.style.background = '#eee4da';
-                    break;
-                case '4':
-                    elem.style.background = '#fff6cf';
-                    break;
-                case '8':
-                    elem.style.background = '#f3b27a';
-                    break;
-                case '16':
-                    elem.style.background = '#f69664';
-                    break;
-                case '32':
-                    elem.style.background = '#f77c5f';
-                    break;
-                case '64':
-                    elem.style.background = '#f75f3b';
-                    break;
-                case '128':
-                    elem.style.background = '#edd073';
-                    break;
-                case '256':
-                    elem.style.background = 'rgb(241 198 61)';
-                    break;
-                case '512':
-                    elem.style.background = 'rgb(249 189 0)';
-                    break;
-                case '1024':
-                    elem.style.background = 'rgb(249 149 0)';
-                    break;
-                case '2048':
-                    elem.style.background = 'rgb(249 103 0)';
-                    break;
-            }
-        })
-    };
+    this.winGame = function() {
+        location.hash = 'win';
+        var gameOver = document.querySelector('#spanID');
 
+        countUser = count;
+    }
+
+    // если игра закончена, то открываем страницу GameOver
     this.gameOver = function(count) {
 
-        location.hash = 'gameover';
+        location.hash = 'gover';
 
         var gameOver = document.querySelector('#spanID');
 
         countUser = count;
 
     };
-
+    // включаем отключаем музыку
     this.musicPlay = function(permit) {
         if (permit) {
             music.play();
@@ -397,31 +343,35 @@ export function ModuleView() {
             music.pause();
         }
     };
-
+    // включаем аудио
     this.audioPlay = function(flag) {
         if (permitAudioModel) {
             switch (flag) {
                 case 'click':
+                    audioObj.click.currentTime = 0;
                     audioObj.click.play();
                     break;
                 case 'xlop':
+                    audioObj.xlop.currentTime = 0;
                     audioObj.xlop.play();
                     break;
                 case 'shag':
+                    audioObj.shag.currentTime = 0;
                     audioObj.shag.play();
+
                     break;
             }
         }
     };
-
+    // фиксируем флаг для аудио
     this.permitAudio = function(permitAudio) {
         permitAudioModel = permitAudio;
     };
-
+    // устанавливаем имя
     this.getName = function(name) {
         nameUser = name;
     };
-
+    // отрисовываем таблицу с результатами
     this.showRecord = function(results) {
         var record = 0;
         record = results[0].count;

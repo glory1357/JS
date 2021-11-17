@@ -8,13 +8,15 @@ export function ModuleController() {
     let endY;
 
     self.init = function(model) {
+
+        myModuleContainer = document.querySelector('.container');
+        myModuleModel = model;
+
         //Вешаем обработчик события, пользователь увидит запрос подтверждения на уход со страницы и его можно будет отменить
         window.onbeforeunload = function() {
             return true;
         };
 
-        myModuleContainer = document.querySelector('.container');
-        myModuleModel = model;
         //---обработчик собыйтий на кнопки в контейнере
         myModuleContainer.addEventListener('click', self.clickButtons);
         //----обработчик на изменение фрагмента url
@@ -26,13 +28,18 @@ export function ModuleController() {
     self.updateState = function() {
         const hashPageName = location.hash.slice(1).toLowerCase();
         myModuleModel.updateState(hashPageName);
-        //----вешаем обработчики на клавиатуру и тач, если открыта страница игры и делаем отрисовку игры
+        //----вешаем обработчики на клавиатуру и тач, если открыта страница игры и делаем отрисовку
         switch (hashPageName) {
             case 'game':
                 document.addEventListener("keydown", self.keyDownHandler);
                 document.addEventListener("touchstart", self.touchstart);
                 document.addEventListener("touchend", self.touchend);
                 myModuleModel.game();
+                break;
+            default:
+                document.removeEventListener("keydown", self.keyDownHandler);
+                document.removeEventListener("touchstart", self.keyDownHandler);
+                document.removeEventListener("touchend", self.keyDownHandler);
                 break;
         }
 
@@ -45,7 +52,7 @@ export function ModuleController() {
                 break;
 
             case "ArrowDown":
-                 myModuleModel.moveBottom();
+                myModuleModel.moveBottom();
                 break;
 
             case "ArrowLeft":
@@ -85,6 +92,9 @@ export function ModuleController() {
     };
 
     self.clickButtons = function(event) {
+        if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A') {
+            myModuleModel.setAudio('click');
+        }
         switch (event.target) {
             case myModuleContainer.querySelector('#btnMusicID'):
                 myModuleModel.setMusic();
@@ -113,6 +123,10 @@ export function ModuleController() {
 
             case myModuleContainer.querySelector('.newGame'):
                 myModuleModel.newGame();
+                break;
+
+            case myModuleContainer.querySelector('.continueGame'):
+                myModuleModel.game();
                 break;
         }
     };

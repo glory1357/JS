@@ -11,8 +11,13 @@
     let results;
     let updatePassword;
     let stringName = 'NastyaGalkina2048';
-    let nameUser='user';
+    let nameUser = 'user';
     let isNewGame = true;
+    let isGenerateRandom = false;
+    let isLock = false;
+    let isAudioShag = false;
+    let isAudioXlop = false;
+    let isWinGame = true;
 
 
     self.init = function(view) {
@@ -23,9 +28,11 @@
     };
 
     self.newGame = function() {
-         isNewGame = true;
+        isNewGame = true;
+        isWinGame = true;
         count = 0;
         myModuleView.countUpdate(count);
+        //  создаем двумерный массив 
         for (let i = 0; i < matrix; i++) {
             mydata[i] = [];
             for (let j = 0; j < matrix; j++) {
@@ -33,22 +40,22 @@
                     x: i,
                     y: j,
                     value: 0,
-                    scale: false,
-                    random: false
                 };
             }
         };
-        myModuleView.removeAlwaysDivs();
-       //  myModuleView.createDivs(mydata);
-        
+
+
     };
 
     self.game = function() {
-      if(isNewGame){
-             self.randomNum();
-             self.randomNum();
-             isNewGame = false;
+        // если была вызвана функция новой игры, то дважды вызываем функцию рандома и удаляем ненужные дивы
+        if (isNewGame) {
+            self.randomNum();
+            self.randomNum();
+            myModuleView.removeAlwaysDivs();
+            isNewGame = false;
         }
+        //  вызываем отрисовку дивов с числами
         myModuleView.createDivs(mydata);
     };
 
@@ -57,43 +64,63 @@
     };
 
     self.randomNum = function() { // генерация случайных чисел и присвоения начального случайного числа mydata
-
-        for (;;) {
-            let r = Math.floor(Math.random() * 4);
-            let c = Math.floor(Math.random() * 4);
-            if (mydata[r][c].value === 0) { // Если значение в текущей координате в данных равно 0, вставляем случайное число 2 или 4
-                let num = Math.random() > 0.2 ? 2 : 4; // Установленное случайное число 2 или 4 с вероятностью выпадения 80% и 20% соответственно
-                mydata[r][c].value = num;
-                 myModuleView.createDiv(r,c,num);
-
-                break;
+        //  в mydata находим ячейку с нулевым значением, создаем хэш, куда присваиваем индексы ячейки и пушим в новый созданный массив
+        let freeCells = [];
+        for (let i = 0; i < matrix; i++) {
+            for (let j = 0; j < matrix; j++) {
+                if (mydata[i][j].value === 0) {
+                    let obj = {
+                        i: i,
+                        j: j
+                    };
+                    freeCells.push(obj);
+                }
             }
+
         }
+        // если массив пустой, то ничего не делаем
+        if (freeCells.length === 0) {
+            return;
+        }
+        // рандомно выбираем индекс в массиве
+        let i = Math.floor(Math.random() * freeCells.length);
+        let obj = freeCells[i];
+
+        let num = Math.random() > 0.2 ? 2 : 4; // Установленное случайное число 2 или 4 с вероятностью выпадения 80% и 20% соответственно
+        // присваиваем в mydata по найденным индексам значение и вызываем отрисовку нового дива
+        mydata[obj.i][obj.j].value = num;
+        myModuleView.createDiv(obj.i, obj.j, num);
     };
     //--- двигаемся вниз
     self.moveBottom = function() {
+
         for (let j = 0; j < matrix; j++) {
+            //начинаем проверку снизу вверх
             for (let i = matrix - 1; i > 0; i--) {
+                // проверяем , есть ли числа в столбце выше выбранной ячейки
                 var lasti = self.bottomNextItem(i, j);
                 if (lasti !== -1) {
+                    // если есть и ячейка пустая, то переностим значение числа и координаты ячейки с числом, вызываем отрисовку
                     if (mydata[i][j].value === 0) {
                         mydata[i][j].x = mydata[lasti][j].x;
                         mydata[i][j].value = mydata[lasti][j].value;
                         mydata[lasti][j].value = 0;
-                        mydata[i][j].random = true;
-                        myModuleView.changeDivs(mydata[i][j],i,j);
+
+                        myModuleView.changeDivs(mydata[i][j], i, j, false);
                         mydata[i][j].x = i;
-                        mydata[i][j].y = j;
-                        myModuleView.audioPlay('shag');
+                        isAudioShag = true;
+                        isGenerateRandom = true;
                         i++;
-                    } else if (mydata[i][j].value === mydata[lasti][j].value) {
+                    } // если число равное числу в выбранной ячейке, то увеличиваем число в ячейке в 2 раза,удаляем ненужный див и делаем отрисовку
+                    else if (mydata[i][j].value === mydata[lasti][j].value) {
                         mydata[i][j].value *= 2;
                         count += mydata[i][j].value;
-                        mydata[i][j].scale = true;
-                        myModuleView.removeItem(lasti,j);
+
                         mydata[lasti][j].value = 0;
-                        myModuleView.changeDivs(mydata[i][j],i,j);
-                        myModuleView.audioPlay('xlop');
+                        myModuleView.changeDivs(mydata[i][j], i, j, true);
+                        myModuleView.removeItem(lasti, j);
+                        isAudioXlop = true;
+                        isGenerateRandom = true;
                     }
                 } else {
                     break;
@@ -101,31 +128,29 @@
 
             }
         }
-        
-        //----делаем проверку, если было изменение , то добавляем новое число
-        for (let i = 0; i < matrix; i++) {
-            if (mydata[i].find((elem) => elem.random === true || elem.scale === true)) {
-                setTimeout(() => {
-                    for (let i = 1; i <= matrix - 3; i++) {
-                        self.randomNum();
-                    }
-                }, 300);
-                break;
-            }
-        };
-        //----Обнуляем все свойства для последующего изменения
-        for (let i = 0; i < matrix; i++) {
-            for (let j = 0; j < matrix; j++) {
-                mydata[i][j].x = i;
-                mydata[i][j].y = j;
-                mydata[i][j].scale = false;
-                mydata[i][j].random = false;
-            }
-        }
-        myModuleView.countUpdate(count);
 
+        self.setAudio();
+        //---- если было изменение , то добавляем новое число
+        if (isGenerateRandom) {
+            setTimeout(() => {
+                for (let i = 1; i <= matrix - 3; i++) {
+                    self.randomNum();
+                }
+            }, 300);
+            isGenerateRandom = false;
+
+
+        }
+
+        // передаем счет для отображения
+        myModuleView.countUpdate(count);
+        // делаем проверку, если хода больше нет, то заканчиваем игру
         if (self.gameOver()) {
             myModuleView.gameOver(count);
+        };
+        //вызываем проверку на выйгрыш
+        if (isWinGame) {
+            self.winGame();
         };
     };
 
@@ -138,62 +163,63 @@
         return -1;
     };
 
+
     self.moveTop = function() {
+
         for (let j = 0; j < matrix; j++) {
+            //начинаем проверку сверху вниз
             for (let i = 0; i < matrix - 1; i++) {
+                // проверяем , есть ли числа в столбце ниже выбранной ячейки
                 var nexti = self.topNextItem(i, j);
                 if (nexti !== -1) {
+                    // если есть и ячейка пустая, то переностим значение числа и координаты ячейки с числом, вызываем отрисовку
                     if (mydata[i][j].value === 0) {
                         mydata[i][j].x = mydata[nexti][j].x;
-                        mydata[i][j].y = mydata[nexti][j].y;
                         mydata[i][j].value = mydata[nexti][j].value;
                         mydata[nexti][j].value = 0;
-                        mydata[i][j].random = true;
-                        myModuleView.changeDivs(mydata[i][j],i,j);
+                        myModuleView.changeDivs(mydata[i][j], i, j, false);
                         mydata[i][j].x = i;
-                        mydata[i][j].y = j;
-                        myModuleView.audioPlay('shag');
+                        isAudioShag = true;
+                        isGenerateRandom = true;
                         i--;
-                    } else if (mydata[i][j].value === mydata[nexti][j].value) {
+                    } // если число равное числу в выбранной ячейке, то увеличиваем число в ячейке в 2 раза,удаляем ненужный див и делаем отрисовку
+                    else if (mydata[i][j].value === mydata[nexti][j].value) {
                         mydata[i][j].value *= 2;
                         count += mydata[i][j].value;
-                        mydata[i][j].scale = true;
                         myModuleView.removeItem(mydata[nexti][j].x, mydata[nexti][j].y);
                         mydata[nexti][j].value = 0;
-                        myModuleView.changeDivs(mydata[i][j],i,j);
-                        myModuleView.audioPlay('xlop');
+                        myModuleView.changeDivs(mydata[i][j], i, j, true);
+                        isAudioXlop = true;
+                        isGenerateRandom = true;
                     }
+
                 } else {
                     break;
                 }
 
             };
         }
-       //  myModuleView.changeDivs(mydata);
-
-        for (let i = matrix - 1; i >= 0; i--) {
-            if (mydata[i].find((elem) => elem.random === true || elem.scale === true)) {
-                setTimeout(() => {
-                    for (let i = 1; i <= matrix - 3; i++) {
-                        self.randomNum();
-                    }
-                }, 300);
-                break;
-            }
-        };
-
-        for (let i = 0; i < matrix; i++) {
-            for (let j = 0; j < matrix; j++) {
-                mydata[i][j].x = i;
-                mydata[i][j].y = j;
-                mydata[i][j].scale = false;
-                mydata[i][j].random = false;
-            }
+        self.setAudio();
+        //---- если было изменение , то добавляем новое число
+        if (isGenerateRandom) {
+            setTimeout(() => {
+                for (let i = 1; i <= matrix - 3; i++) {
+                    self.randomNum();
+                }
+            }, 300);
+            isGenerateRandom = false;
         }
+
+        // передаем счет для отображения
         myModuleView.countUpdate(count);
 
+        // делаем проверку, если хода больше нет, то заканчиваем игру
         if (self.gameOver()) {
             myModuleView.gameOver(count);
+        };
+        //вызываем проверку на выйгрыш
+        if (isWinGame) {
+            self.winGame();
         };
 
     };
@@ -210,28 +236,30 @@
     self.moveLeft = function() {
 
         for (let i = 0; i < matrix; i++) {
+            //начинаем проверку слева направо
             for (let j = 0; j < matrix - 1; j++) {
+                // проверяем , есть ли числа в строке правее выбранной ячейки
                 var nextj = self.leftNextItem(i, j);
                 if (nextj !== -1) {
+                    // если есть и ячейка пустая, то переностим значение числа и координаты ячейки с числом, вызываем отрисовку
                     if (mydata[i][j].value === 0) {
-                        mydata[i][j].x = mydata[i][nextj].x;
                         mydata[i][j].y = mydata[i][nextj].y;
                         mydata[i][j].value = mydata[i][nextj].value;
-                        mydata[i][j].random = true;
                         mydata[i][nextj].value = 0;
-                        myModuleView.changeDivs(mydata[i][j],i,j);
-                        mydata[i][j].x = i;
+                        myModuleView.changeDivs(mydata[i][j], i, j, false);
                         mydata[i][j].y = j;
-                        myModuleView.audioPlay('shag');
+                        isAudioShag = true;
+                        isGenerateRandom = true;
                         j--;
-                    } else if (mydata[i][j].value === mydata[i][nextj].value) {
+                    } // если число равное числу в выбранной ячейке, то увеличиваем число в ячейке в 2 раза,удаляем ненужный див и делаем отрисовку
+                    else if (mydata[i][j].value === mydata[i][nextj].value) {
                         mydata[i][j].value *= 2;
                         count += mydata[i][j].value;
-                        mydata[i][j].scale = true;
                         myModuleView.removeItem(mydata[i][nextj].x, mydata[i][nextj].y);
                         mydata[i][nextj].value = 0;
-                        myModuleView.changeDivs(mydata[i][j],i,j);
-                        myModuleView.audioPlay('xlop');
+                        myModuleView.changeDivs(mydata[i][j], i, j, true);
+                        isAudioXlop = true;
+                        isGenerateRandom = true;
                     }
                 } else {
                     break;
@@ -239,30 +267,28 @@
             }
         };
 
-        for (let i = 0; i < matrix; i++) {
-            if ((mydata[i].find((elem) => elem.random === true)) || (mydata[i].find((elem) => elem.scale === true))) {
-                setTimeout(() => {
-                    for (let i = 1; i <= matrix - 3; i++) {
-                        self.randomNum();
-                    }
-                }, 300);
+        self.setAudio();
+        //---- если было изменение , то добавляем новое число
+        if (isGenerateRandom) {
+            setTimeout(() => {
+                for (let i = 1; i <= matrix - 3; i++) {
+                    self.randomNum();
+                }
+            }, 300);
 
-                break;
-            }
-        };
-
-        for (let i = 0; i < matrix; i++) {
-            for (let j = matrix - 1; j >= 0; j--) {
-                mydata[i][j].x = i;
-                mydata[i][j].y = j;
-                mydata[i][j].scale = false;
-                mydata[i][j].random = false;
-            }
+            isGenerateRandom = false;
         }
+
+        // передаем счет для отображения
         myModuleView.countUpdate(count);
 
+        // делаем проверку, если хода больше нет, то заканчиваем игру
         if (self.gameOver()) {
             myModuleView.gameOver(count);
+        };
+        //вызываем проверку на выйгрыш
+        if (isWinGame) {
+            self.winGame();
         };
     };
 
@@ -276,62 +302,61 @@
     };
 
     self.moveRight = function() {
-
         for (let i = 0; i < matrix; i++) {
+            //начинаем проверку справа налево
             for (let j = matrix - 1; j > 0; j--) {
+                // проверяем , есть ли числа в строке левее выбранной ячейки
                 var lastj = self.rightNextItem(i, j);
+                // если есть и ячейка пустая, то переностим значение числа и координаты ячейки с числом, вызываем отрисовку
                 if (lastj !== -1) {
                     if (mydata[i][j].value === 0) {
-                        mydata[i][j].x = mydata[i][lastj].x;
                         mydata[i][j].y = mydata[i][lastj].y;
                         mydata[i][j].value = mydata[i][lastj].value;
-                        mydata[i][j].random = true;
                         mydata[i][lastj].value = 0;
-                        myModuleView.changeDivs(mydata[i][j],i,j);
-                        mydata[i][j].x = i;
+                        myModuleView.changeDivs(mydata[i][j], i, j, false);
                         mydata[i][j].y = j;
-                        myModuleView.audioPlay('shag');
-
+                        isGenerateRandom = true;
+                        isAudioShag = true;
                         j++;
-                    } else if (mydata[i][j].value === mydata[i][lastj].value) {
+                    } // если число равное числу в выбранной ячейке, то увеличиваем число в ячейке в 2 раза,удаляем ненужный див и делаем отрисовку
+                    else if (mydata[i][j].value === mydata[i][lastj].value) {
                         mydata[i][j].value *= 2;
                         count += mydata[i][j].value;
-                        mydata[i][j].scale = true;
                         myModuleView.removeItem(mydata[i][lastj].x, mydata[i][lastj].y);
                         mydata[i][lastj].value = 0;
-                        myModuleView.changeDivs(mydata[i][j],i,j);
-                        myModuleView.audioPlay('xlop');
+                        myModuleView.changeDivs(mydata[i][j], i, j, true);
+                        isGenerateRandom = true;
+                        isAudioXlop = true;
                     }
+
                 } else {
                     break;
                 }
             }
         };
 
-        for (let i = 0; i < matrix; i++) {
-            if ((mydata[i].find((elem) => elem.random === true)) || (mydata[i].find((elem) => elem.scale === true))) {
-                setTimeout(() => {
-                    for (let i = 1; i <= matrix - 3; i++) {
-                        self.randomNum();
-                    }
-                }, 300);
-                break;
-            }
-        };
-
-        for (let i = 0; i < matrix; i++) {
-            for (let j = 0; j < matrix; j++) {
-                mydata[i][j].x = i;
-                mydata[i][j].y = j;
-                mydata[i][j].scale = false;
-                mydata[i][j].random = false;
-            }
+        self.setAudio();
+        //---- если было изменение , то добавляем новое число
+        if (isGenerateRandom) {
+            setTimeout(() => {
+                for (let i = 1; i <= matrix - 3; i++) {
+                    self.randomNum();
+                }
+            }, 300);
+            isGenerateRandom = false;
         }
+
+        // передаем счет для отображения
         myModuleView.countUpdate(count);
 
+        // делаем проверку, если хода больше нет, то заканчиваем игру
         if (self.gameOver()) {
             myModuleView.gameOver(count);
         };
+        //вызываем проверку на выйгрыш
+        if (isWinGame) {
+            self.winGame();
+        }
     };
 
     self.rightNextItem = function(i, j) {
@@ -343,17 +368,31 @@
         return -1;
     };
 
+    self.winGame = function() {
+        // если есть значение 2048, то вызываем метод вью на открытие страницы и передаем счет    
+        for (let i = 0; i < matrix; i++) {
+            for (let j = 0; j < matrix; j++) {
+                if (mydata[i][j].value === 2048) {
+                    myModuleView.winGame(count)
+                    isWinGame = false;
+                }
+            }
+        }
+    };
+
     self.gameOver = function() {
         for (let i = 0; i < matrix; i++) {
             for (let j = 0; j < matrix; j++) {
+                // если есть нулевые значения, то возвращаем false
                 if (mydata[i][j].value === 0) {
                     return false;
                 };
+                // если есть равные значения в строках в соседних ячейках, то возвращаем false
                 if (j < matrix - 1) {
                     if (mydata[i][j].value === mydata[i][j + 1].value) {
                         return false;
                     }
-                };
+                }; // если есть равные значения в столбцах в соседних ячейках, то возвращаем false
                 if (i < matrix - 1) {
                     if (mydata[i][j].value === mydata[i + 1][j].value) {
                         return false;
@@ -361,10 +400,11 @@
                 }
             }
         }
+        // если проверка прошла, то вызываем функцию сохранения результатов на сервер
         self.updateResults();
         return true;
     };
-
+    // если - то уменьшаем кличество ячеек, минимальное 4, если + то увеличиваем, максимальное 8 , и начинаем новую игру
     self.resizeMatrix = function(argument) {
         switch (argument) {
             case '-':
@@ -385,6 +425,20 @@
         }
     };
 
+    self.setAudio = function(click) {
+        if (isAudioShag) {
+            myModuleView.audioPlay('shag');
+            isAudioShag = false;
+        };
+        if (isAudioXlop) {
+            myModuleView.audioPlay('xlop');
+            isAudioXlop = false;
+        };
+        if (click) {
+            myModuleView.audioPlay('click');
+        }
+    };
+
     self.setMusic = function() {
         if (permitMusic) {
             myModuleView.musicPlay(permitMusic);
@@ -399,15 +453,16 @@
 
     self.permitAudio = function() {
         if (permitAudio) {
-            myModuleView.permitAudio(permitAudio);
             permitAudio = false;
-        } else {
             myModuleView.permitAudio(permitAudio);
+        } else {
             permitAudio = true;
+            myModuleView.permitAudio(permitAudio);
+
         }
     };
 
-
+    // устанавливаем имя, если не задано, то User
     self.setName = function(name) {
         if (!name) {
             nameUser = 'User';

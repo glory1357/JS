@@ -64,13 +64,13 @@ body {
   background-color: #ffe9a8;
   width: 550px;
   margin: auto;
-  padding-bottom: 15px;
+  padding-bottom: 14px;
   position: relative;
 }
 
 .contentDiv{
-width: 500px;
-height: 500px;
+width: 450px;
+height: 450px;
 margin: auto;
 
 }
@@ -82,7 +82,6 @@ header {
   justify-content: space-around;
   text-align: center;
   align-items: center;
-  padding-top: 15px;
 }
 
 header h1 {
@@ -221,23 +220,23 @@ height: 100px;
 }
 
 .matrix5{
-width: 85px;
-height: 85px;
+width: 78px;
+height: 78px;
 }
 
 .matrix6{
-width: 70px;
-height: 70px;
+width: 63px;
+height: 63px;
 }
 
 .matrix7{
-width: 60px;
-height: 60px;
+width: 53px;
+height: 53px;
 }
 
 .matrix8{
-width: 50px;
-height: 50px;
+width: 46px;
+height: 46px;
 }
 
 
@@ -360,7 +359,7 @@ height: 50px;
   display: flex;
   justify-content: center;
   background: #ffd094;
-  ;
+  
   width: 100%;
   height: 100%;
   margin: auto;
@@ -371,14 +370,56 @@ height: 50px;
 
 .newElem {
   position: absolute;
-  transition: .3s;
+  
   font-family: 'Patrick Hand', cursive;
   font-size: 35px;
   border-radius: 10%;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: .4s;
 }
+
+[data-color='2'] { 
+background: #eee4da;
+}
+[data-color='4'] { 
+background: #fff6cf;
+}
+[data-color='8'] { 
+background: #f3b27a;
+}
+[data-color='16'] { 
+background: #f69664;
+}
+[data-color='32'] { 
+background: #f77c5f;
+}
+[data-color='64'] { 
+background: #f75f3b;
+}
+[data-color='128'] { 
+background: #edd073;
+}
+[data-color='256'] { 
+background: rgb(241 198 61);
+}
+[data-color='512'] { 
+background: rgb(249 189 0);
+}
+[data-color='1024'] { 
+background: rgb(249 149 0);
+}
+[data-color='2048'] { 
+background: rgb(249 103 0);
+}
+[data-color='4096'] { 
+background: rgb(191 103 41);
+}
+[data-color='8192'] { 
+background: rgb(255 106 0);
+}
+
 
 .newElemScale {
   animation: scalingNewElem 0.3s;
@@ -438,6 +479,7 @@ height: 50px;
 
 .divGameOver h2 {
   font-size: 46px;
+  text-align: center;
 }
 
 .divGameOver a {
