@@ -242,6 +242,7 @@ export function ModuleView() {
         let newdiv = document.createElement('div');;
         newdiv.classList.add('newElem');
         newdiv.classList.add('newElemScale');
+        newdiv.classList.add(`matrix${matrix}`);
         newdiv.dataset.color = num;
         setTimeout(() => {
             newdiv.classList.remove('newElemScale');
