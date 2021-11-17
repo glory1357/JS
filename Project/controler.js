@@ -42,7 +42,6 @@ export function ModuleController() {
                 document.removeEventListener("touchend", self.keyDownHandler);
                 break;
         }
-
     };
 
     self.keyDownHandler = function(event) {
@@ -63,7 +62,7 @@ export function ModuleController() {
                 myModuleModel.moveRight();
                 break;
 
-        }
+        };
     };
     self.touchstart = function(event) {
         startX = event.touches[0].pageX;
@@ -71,7 +70,7 @@ export function ModuleController() {
     };
 
     self.touchend = function(event) {
-        ;
+        
         endX = event.changedTouches[0].pageX;
         endY = event.changedTouches[0].pageY;
 
@@ -94,7 +93,7 @@ export function ModuleController() {
     self.clickButtons = function(event) {
         if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A') {
             myModuleModel.setAudio('click');
-        }
+        };
         switch (event.target) {
             case myModuleContainer.querySelector('#btnMusicID'):
                 myModuleModel.setMusic();
@@ -130,7 +129,4 @@ export function ModuleController() {
                 break;
         }
     };
-
-
-
 }

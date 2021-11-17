@@ -4,7 +4,6 @@ export function ModuleView() {
     let contentContainer = null;
     let matrix = 4;
     let coords = [];
-    let sizeElem = null;
     let strResults = '';
     let countUser = 0;
     let nameUser = 'User';
@@ -102,7 +101,6 @@ export function ModuleView() {
            </div>`
 
         }
-
     };
 
     const GameOver = {
@@ -113,7 +111,6 @@ export function ModuleView() {
            <h2>Game Over</h2><p>Ваш результат: <span id='spanID'>${countUser}</span></p><a class ='modal__NewGame newGame' href="#game">Новая игра</a>
            </div>`
         }
-
     };
 
     const ErrorComponent = {
@@ -136,7 +133,6 @@ export function ModuleView() {
         name: NameComponent,
         win: YouWin,
     };
-
 
     this.init = function() {
         const container = document.createElement('div');
@@ -197,7 +193,6 @@ export function ModuleView() {
         container.append(contentDiv);
 
         contentContainer = contentDiv;
-
     };
 
     this.renderContent = function(hashPageName) {
@@ -213,7 +208,7 @@ export function ModuleView() {
             this.getCoordsElems();
         }
     };
-    // получаем координаты всех дивов с ячейками и размер
+    // получаем координаты всех дивов с ячейками 
     this.getCoordsElems = function() {
         for (let i = 0; i < matrix; i++) {
             coords[i] = [];
@@ -225,10 +220,7 @@ export function ModuleView() {
                 }
             }
         }
-        let div = document.querySelector('#elem11');
-        sizeElem = div.offsetWidth;
-
-    }
+    };
     // отрисовка всех ячеек с числами
     this.createDivs = function(mydata) {
         var divs = myModuleContainer.querySelectorAll('.lineDivsStroke');
@@ -240,11 +232,9 @@ export function ModuleView() {
                         this.createDiv(i, j, mydata[i][j].value)
 
                     }
-
                 }
             }
         }
-
     };
     // отрисовка одной ячейки с числом
     this.createDiv = function(i, j, num) {
@@ -258,8 +248,6 @@ export function ModuleView() {
         }, 300);
         newdiv.id = 'newElem' + i + j;
         newdiv.style.cssText = `
-              width:${sizeElem}px ;
-              height: ${sizeElem}px ;
               left: ${coords[i][j].left}px;
               top: ${coords[i][j].top}px;`;
         newdiv.textContent = num;
@@ -271,20 +259,17 @@ export function ModuleView() {
 
         let newdiv = myModuleContainer.querySelector(`#newElem` + mydata.x + mydata.y);
 
-
         newdiv.style.top = `${coords[i][j].top}px`;
         newdiv.style.left = `${coords[i][j].left}px`;
         newdiv.dataset.color = mydata.value;
         newdiv.textContent = mydata.value;
 
-
         if (scale) {
             newdiv.classList.add('scale');
 
             setTimeout(() => newdiv.classList.remove('scale'), 500);
-        }
+        };
         newdiv.id = 'newElem' + i + j;
-
     };
 
 
@@ -293,7 +278,6 @@ export function ModuleView() {
         if (myModuleContainer.querySelector(`#newElem` + i + j)) {
             (myModuleContainer.querySelector(`#newElem` + i + j)).remove();
         };
-
     };
 
     // удаление всех ячеек с числами
@@ -322,7 +306,7 @@ export function ModuleView() {
         var gameOver = document.querySelector('#spanID');
 
         countUser = count;
-    }
+    };
 
     // если игра закончена, то открываем страницу GameOver
     this.gameOver = function(count) {
@@ -384,7 +368,6 @@ export function ModuleView() {
                 result.count + "</li>";
         };
         strResults = str;
-
     };
 }
 /* -------- end view --------- */

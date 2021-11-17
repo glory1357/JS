@@ -24,7 +24,6 @@
         myModuleView = view;
         self.newGame();
         self.readInfo();
-
     };
 
     self.newGame = function() {
@@ -43,8 +42,6 @@
                 };
             }
         };
-
-
     };
 
     self.game = function() {
@@ -76,12 +73,11 @@
                     freeCells.push(obj);
                 }
             }
-
-        }
+        };
         // если массив пустой, то ничего не делаем
         if (freeCells.length === 0) {
             return;
-        }
+        };
         // рандомно выбираем индекс в массиве
         let i = Math.floor(Math.random() * freeCells.length);
         let obj = freeCells[i];
@@ -124,10 +120,10 @@
                     }
                 } else {
                     break;
-                }
+                };
 
-            }
-        }
+            };
+        };
 
         self.setAudio();
         //---- если было изменение , то добавляем новое число
@@ -138,9 +134,7 @@
                 }
             }, 300);
             isGenerateRandom = false;
-
-
-        }
+        };
 
         // передаем счет для отображения
         myModuleView.countUpdate(count);
@@ -162,7 +156,6 @@
         }
         return -1;
     };
-
 
     self.moveTop = function() {
 
@@ -196,10 +189,10 @@
                 } else {
                     break;
                 }
-
             };
-        }
-        self.setAudio();
+        };
+
+    self.setAudio();
         //---- если было изменение , то добавляем новое число
         if (isGenerateRandom) {
             setTimeout(() => {
@@ -208,7 +201,7 @@
                 }
             }, 300);
             isGenerateRandom = false;
-        }
+        };
 
         // передаем счет для отображения
         myModuleView.countUpdate(count);
@@ -277,7 +270,7 @@
             }, 300);
 
             isGenerateRandom = false;
-        }
+        };
 
         // передаем счет для отображения
         myModuleView.countUpdate(count);
@@ -344,7 +337,7 @@
                 }
             }, 300);
             isGenerateRandom = false;
-        }
+        };
 
         // передаем счет для отображения
         myModuleView.countUpdate(count);
@@ -356,7 +349,7 @@
         //вызываем проверку на выйгрыш
         if (isWinGame) {
             self.winGame();
-        }
+        };
     };
 
     self.rightNextItem = function(i, j) {
@@ -458,7 +451,6 @@
         } else {
             permitAudio = true;
             myModuleView.permitAudio(permitAudio);
-
         }
     };
 
@@ -470,7 +462,6 @@
             nameUser = name;
         };
         myModuleView.getName(nameUser);
-
     };
 
 
@@ -501,7 +492,7 @@
             }
             myModuleView.showRecord(results);
         }
-    }
+    };
 
     // получает информацию с сервера, добавляет новое,
     // показывает и сохраняет на сервере
@@ -520,7 +511,7 @@
             success: self.lockGetReady,
             error: self.errorHandler
         });
-    }
+    };
 
     // информация получена, добавляет, показывает, сохраняет
     self.lockGetReady = function(callresult) {
@@ -561,7 +552,7 @@
                 error: self.errorHandler
             });
         }
-    }
+    };
 
     // информация вместе с новым сохранены на сервере
     self.updateReady = function(callresult) {
