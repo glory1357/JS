@@ -1,0 +1,126 @@
+@media only screen and (max-width: 570px) {
+    html, body {
+    height: 100%;
+  }
+  .container{
+    height: 100%;
+      width: 100%;
+      background-color: #401b1b;
+  }
+  .rulesClass ol {
+    font-size: 13px;
+  }
+  .menuDivContent .divsMenu div {
+    font-size: 19px;
+  }
+  
+  
+  .contentDiv {
+      width: 440px;
+      height: 440px;
+      margin-top: 25px;
+  }
+  
+  .matrix4{
+    width: 90px;
+    height: 90px;
+  }
+  
+  .matrix5{
+    width: 75px;
+    height: 75px;
+  }
+  
+  .matrix6{
+    width: 60px;
+    height: 60px;
+  }
+  
+  .matrix7{
+    width: 50px;
+    height: 50px;
+  }
+  
+  .matrix8{
+    width: 43px;
+    height: 43px;
+  }
+  }
+  
+  
+  @media only screen and (max-width: 470px) {
+  
+  .contentDiv {
+    width: 350px;
+    height: 350px;
+  }
+  
+  header {
+      padding-top: 25px;
+  }
+  header h1 {
+      font-size: 56px;
+  }
+  
+  header .countDiv{
+  width: 95px;
+  }
+  .menuDivContent .divsMenu div {
+      margin: 20px;
+      display: block;
+      text-align: center;
+      padding: 0;
+      font-size: 17px;
+  }
+  .mainMenuDiv {
+    margin-bottom: 15px;
+    margin-top: 15px;
+  }
+  
+  .mainMenuDiv .menuDiv {
+   margin-right: 0px; 
+   margin-left: 0px;
+   font-size: 13px;
+  }
+  
+  .rulesClass ol {
+    font-size: 10px;
+  }
+  
+  .matrix4{
+    width: 73px;
+    height: 73px;
+  }
+  
+  .matrix5{
+    width: 58px;
+    height: 58px;
+  }
+  
+  .matrix6{
+    width: 46px;
+    height: 46px;
+  }
+  
+  .matrix7{
+    width: 38px;
+    height: 38px;
+  }
+  
+  .matrix8{
+    width: 32px;
+    height: 32px;
+  }
+  }
+  
+  @media only screen and (max-width: 370px) {
+  .contentDiv {
+   width: 320px;
+      height: 340px;
+  }
+  
+  header h1 {
+     font-size: 44px;
+  }
+  
+  }
